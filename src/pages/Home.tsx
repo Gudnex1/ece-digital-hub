@@ -4,40 +4,32 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-
 const Home = () => {
-  const features = [
-    {
-      icon: Lightbulb,
-      title: 'Innovation & Research',
-      description: 'Cutting-edge research in AI, IoT, embedded systems, and digital electronics.',
-    },
-    {
-      icon: Users,
-      title: 'Expert Faculty',
-      description: 'Learn from industry professionals and renowned academics with extensive experience.',
-    },
-    {
-      icon: Award,
-      title: 'Industry Recognition',
-      description: 'Our graduates are highly sought after by leading technology companies worldwide.',
-    },
-    {
-      icon: TrendingUp,
-      title: 'Career Growth',
-      description: '95% placement rate with competitive packages in top tech companies.',
-    },
-  ];
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  const features = [{
+    icon: Lightbulb,
+    title: 'Innovation & Research',
+    description: 'Cutting-edge research in AI, IoT, embedded systems, and digital electronics.'
+  }, {
+    icon: Users,
+    title: 'Expert Faculty',
+    description: 'Learn from industry professionals and renowned academics with extensive experience.'
+  }, {
+    icon: Award,
+    title: 'Industry Recognition',
+    description: 'Our graduates are highly sought after by leading technology companies worldwide.'
+  }, {
+    icon: TrendingUp,
+    title: 'Career Growth',
+    description: '95% placement rate with competitive packages in top tech companies.'
+  }];
+  return <div className="min-h-screen flex flex-col">
       <Header />
       
       {/* Hero Section */}
       <section className="relative bg-hero-gradient py-20 md:py-32">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in">
+            <h1 className="text-4xl md:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in text-center">
               Department of Electronics & Computer Engineering
             </h1>
             <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 animate-fade-in">
@@ -77,8 +69,7 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <Card key={index} className="border-border hover:shadow-lg transition-shadow">
+            {features.map((feature, index) => <Card key={index} className="border-border hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
                   <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
                     <feature.icon className="h-6 w-6 text-primary" />
@@ -86,8 +77,7 @@ const Home = () => {
                   <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
                   <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -174,8 +164,6 @@ const Home = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Home;
