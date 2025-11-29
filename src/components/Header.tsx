@@ -1,14 +1,23 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+<<<<<<< HEAD
 import { Menu, X, GraduationCap, Moon, Sun } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { useTheme } from "next-themes";
+=======
+import { Menu, X, GraduationCap, Moon, Sun } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useTheme } from 'next-themes';
+>>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { theme, setTheme } = useTheme();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -16,7 +25,10 @@ const Header = () => {
     { name: 'Infrastructure', path: '/infrastructure' },
     { name: 'Research', path: '/research' },
     { name: 'Degree Programs', path: '/programs' },
+<<<<<<< HEAD
     // { name: 'Events & News', path: '/events' },
+=======
+>>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -58,10 +70,17 @@ const Header = () => {
             <Button
               variant="ghost"
               size="icon"
+<<<<<<< HEAD
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="ml-2"
             >
               {theme === "dark" ? (
+=======
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="ml-2"
+            >
+              {theme === 'dark' ? (
+>>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
                 <Sun className="h-5 w-5" />
               ) : (
                 <Moon className="h-5 w-5" />
@@ -74,9 +93,15 @@ const Header = () => {
             <Button
               variant="ghost"
               size="icon"
+<<<<<<< HEAD
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
               {theme === "dark" ? (
+=======
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            >
+              {theme === 'dark' ? (
+>>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
                 <Sun className="h-5 w-5" />
               ) : (
                 <Moon className="h-5 w-5" />
@@ -87,11 +112,15 @@ const Header = () => {
               size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
+<<<<<<< HEAD
               {isMenuOpen ? (
                 <X className="h-5 w-5" />
               ) : (
                 <Menu className="h-5 w-5" />
               )}
+=======
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+>>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
             </Button>
           </div>
         </div>

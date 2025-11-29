@@ -9,7 +9,10 @@ import Lecturers from "./pages/Lecturers";
 import Infrastructure from "./pages/Infrastructure";
 import Research from "./pages/Research";
 import Programs from "./pages/Programs";
+<<<<<<< HEAD
 // import Events from "./pages/Events";
+=======
+>>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
