@@ -1,7 +1,5 @@
-import { ArrowRight, Lightbulb, Users, Award, TrendingUp } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Lightbulb, Users, Award, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
@@ -22,18 +20,9 @@ const Home = () => {
   }, [api]);
 
   const heroSlides = [
-    {
-      title: 'Department of Electronics & Computer Engineering',
-      description: 'Pioneering the future of technology through innovative education, groundbreaking research, and industry collaboration. Join us in shaping tomorrow\'s engineering solutions.'
-    },
-    {
-      title: 'Innovation & Research Excellence',
-      description: 'Leading cutting-edge research in AI, IoT, embedded systems, and digital electronics. Our state-of-the-art facilities support breakthrough innovations that shape the future.'
-    },
-    {
-      title: 'Industry-Ready Graduates',
-      description: '95% placement rate with competitive packages. Our graduates are highly sought after by leading technology companies worldwide, making an immediate impact in their careers.'
-    }
+    '/carousel/slide1.jpg',
+    '/carousel/slide2.jpg',
+    '/carousel/slide3.jpg'
   ];
 
   const features = [{
@@ -57,7 +46,7 @@ const Home = () => {
       <Header />
       
       {/* Hero Section with Carousel */}
-      <section className="relative bg-hero-gradient py-20 md:py-32">
+      <section className="relative w-full h-[500px] md:h-[600px] overflow-hidden">
         <Carousel
           setApi={setApi}
           opts={{ loop: true }}
@@ -66,34 +55,16 @@ const Home = () => {
               delay: 5000,
             }),
           ]}
-          className="w-full"
+          className="w-full h-full"
         >
-          <CarouselContent>
-            {heroSlides.map((slide, index) => (
-              <CarouselItem key={index}>
-                <div className="container mx-auto px-4">
-                  <div className="max-w-3xl mx-auto">
-                    <h1 className="text-4xl md:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in text-center">
-                      {slide.title}
-                    </h1>
-                    <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 animate-fade-in text-center">
-                      {slide.description}
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 animate-fade-in justify-center">
-                      <Link to="/programs">
-                        <Button size="lg" variant="secondary" className="w-full sm:w-auto group">
-                          Explore Programs
-                          <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                        </Button>
-                      </Link>
-                      <Link to="/research">
-                        <Button size="lg" variant="outline" className="w-full sm:w-auto bg-background/10 text-primary-foreground border-primary-foreground/30 hover:bg-background/20">
-                          View Research
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+          <CarouselContent className="h-full">
+            {heroSlides.map((imagePath, index) => (
+              <CarouselItem key={index} className="h-full">
+                <img 
+                  src={imagePath} 
+                  alt={`Slide ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -107,15 +78,13 @@ const Home = () => {
               onClick={() => api?.scrollTo(index)}
               className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                 current === index 
-                  ? 'bg-primary-foreground w-8' 
-                  : 'bg-primary-foreground/40 hover:bg-primary-foreground/60'
+                  ? 'bg-white w-8' 
+                  : 'bg-white/60 hover:bg-white/80'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
-        
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent pointer-events-none" />
       </section>
 
       {/* About Section */}
