@@ -6,10 +6,10 @@ import Footer from '@/components/Footer';
 const Lecturers = () => {
   const lecturers = [
     {
-      name: 'Dr. Sarah Johnson',
+      name: 'Dr. Shoewu',
       role: 'Professor & Department Head',
       specialization: 'VLSI Design & Microelectronics',
-      email: 's.johnson@university.edu',
+      email: '',
     },
     {
       name: 'Dr. Michael Chen',

@@ -8,7 +8,7 @@ const Programs = () => {
   const programs = [
     {
       title: 'BSc in Electronics and Computer Engineering',
-      duration: '4 Years',
+      duration: '5 Years',
       overview: 'A comprehensive program combining electronics and computer engineering principles, preparing students for careers in integrated systems design, embedded systems, and digital electronics.',
       careers: [
         'Embedded Systems Engineer',
@@ -20,7 +20,7 @@ const Programs = () => {
     },
     {
       title: 'BSc in Computer Engineering',
-      duration: '4 Years',
+      duration: '5 Years',
       overview: 'Focused on computer systems, software engineering, and digital technologies. Students gain expertise in computer architecture, operating systems, and software development.',
       careers: [
         'Software Engineer',
@@ -32,7 +32,7 @@ const Programs = () => {
     },
     {
       title: 'BSc in Electronics Engineering',
-      duration: '4 Years',
+      duration: '5 Years',
       overview: 'Specializes in electronic circuits, signal processing, and communication systems. Prepares students for careers in electronics design, telecommunications, and power electronics.',
       careers: [
         'Electronics Design Engineer',
@@ -134,10 +134,7 @@ const Programs = () => {
                           <p className="text-muted-foreground mb-1">Duration</p>
                           <p className="font-medium text-foreground">{program.duration} Full-Time</p>
                         </div>
-                        <div>
-                          <p className="text-muted-foreground mb-1">Credits</p>
-                          <p className="font-medium text-foreground">120 Credits</p>
-                        </div>
+                        
                         <div>
                           <p className="text-muted-foreground mb-1">Format</p>
                           <p className="font-medium text-foreground">On-Campus</p>

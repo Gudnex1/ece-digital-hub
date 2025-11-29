@@ -2,7 +2,7 @@ import { Mail, Phone, MapPin, GraduationCap } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-card border-t border-border mt-auto">
+    <footer className="bg-gray-800 border-t border-border mt-auto">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About Section */}
@@ -11,49 +11,48 @@ const Footer = () => {
               <div className="bg-hero-gradient p-2 rounded-lg">
                 <GraduationCap className="h-5 w-5 text-primary-foreground" />
               </div>
-              <h3 className="text-lg font-bold text-foreground">ECE Department</h3>
+              <h3 className="text-lg font-bold text-white">ECE Department</h3>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-slate-400">
               Shaping the future of electronics and computer engineering through excellence in education, research, and innovation.
             </p>
           </div>
 
           {/* Contact Information */}
           <div>
-            <h3 className="text-lg font-bold text-foreground mb-4">Contact Us</h3>
+            <h3 className="text-lg font-bold text-white mb-4">Contact Us</h3>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <MapPin className="h-5 w-5 text-primary mt-0.5" />
-                <p className="text-sm text-muted-foreground">
-                  Department of Electronics & Computer Engineering<br />
-                  University Campus
+                <MapPin className="h-5 w-5 text-white mt-0.5" />
+                <p className="text-sm text-slate-400">
+                  Department of Electronics & Computer Engineering
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <Phone className="h-5 w-5 text-primary" />
-                <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+                <Phone className="h-5 w-5 text-white" />
+                <p className="text-sm text-slate-400">+1 (555) 123-4567</p>
               </div>
               <div className="flex items-center gap-3">
-                <Mail className="h-5 w-5 text-primary" />
-                <p className="text-sm text-muted-foreground">ece@university.edu</p>
+                <Mail className="h-5 w-5 text-white" />
+                <p className="text-sm text-slate-400">ece@university.edu</p>
               </div>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-bold text-foreground mb-4">Quick Links</h3>
+            <h3 className="text-lg font-bold text-white mb-4">Quick Links</h3>
             <div className="space-y-2">
-              <a href="/" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+              <a href="/" className="block text-sm text-slate-400 hover:text-white transition-colors">
                 Home
               </a>
-              <a href="/lecturers" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+              <a href="/lecturers" className="block text-sm text-slate-400 hover:text-white transition-colors">
                 Faculty
               </a>
-              <a href="/programs" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+              <a href="/programs" className="block text-sm text-slate-400 hover:text-white transition-colors">
                 Academic Programs
               </a>
-              <a href="/research" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+              <a href="/research" className="block text-sm text-slate-400 hover:text-white transition-colors">
                 Research & Publications
               </a>
             </div>
@@ -61,7 +60,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-8 pt-8 border-t border-border text-center">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-slate-400">
             © {new Date().getFullYear()} Department of Electronics & Computer Engineering. All rights reserved.
           </p>
         </div>
