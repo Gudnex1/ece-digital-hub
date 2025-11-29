@@ -4,7 +4,38 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
+import { useState, useEffect } from 'react';
 const Home = () => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+
+    setCurrent(api.selectedScrollSnap());
+
+    api.on('select', () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
+  const heroSlides = [
+    {
+      title: 'Department of Electronics & Computer Engineering',
+      description: 'Pioneering the future of technology through innovative education, groundbreaking research, and industry collaboration. Join us in shaping tomorrow\'s engineering solutions.'
+    },
+    {
+      title: 'Innovation & Research Excellence',
+      description: 'Leading cutting-edge research in AI, IoT, embedded systems, and digital electronics. Our state-of-the-art facilities support breakthrough innovations that shape the future.'
+    },
+    {
+      title: 'Industry-Ready Graduates',
+      description: '95% placement rate with competitive packages. Our graduates are highly sought after by leading technology companies worldwide, making an immediate impact in their careers.'
+    }
+  ];
+
   const features = [{
     icon: Lightbulb,
     title: 'Innovation & Research',
@@ -25,33 +56,66 @@ const Home = () => {
   return <div className="min-h-screen flex flex-col">
       <Header />
       
-      {/* Hero Section */}
+      {/* Hero Section with Carousel */}
       <section className="relative bg-hero-gradient py-20 md:py-32">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in text-center">
-              Department of Electronics & Computer Engineering
-            </h1>
-            <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 animate-fade-in">
-              Pioneering the future of technology through innovative education, groundbreaking research, 
-              and industry collaboration. Join us in shaping tomorrow's engineering solutions.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
-              <Link to="/programs">
-                <Button size="lg" variant="secondary" className="w-full sm:w-auto group">
-                  Explore Programs
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-              <Link to="/research">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto bg-background/10 text-primary-foreground border-primary-foreground/30 hover:bg-background/20">
-                  View Research
-                </Button>
-              </Link>
-            </div>
-          </div>
+        <Carousel
+          setApi={setApi}
+          opts={{ loop: true }}
+          plugins={[
+            Autoplay({
+              delay: 5000,
+            }),
+          ]}
+          className="w-full"
+        >
+          <CarouselContent>
+            {heroSlides.map((slide, index) => (
+              <CarouselItem key={index}>
+                <div className="container mx-auto px-4">
+                  <div className="max-w-3xl mx-auto">
+                    <h1 className="text-4xl md:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in text-center">
+                      {slide.title}
+                    </h1>
+                    <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 animate-fade-in text-center">
+                      {slide.description}
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 animate-fade-in justify-center">
+                      <Link to="/programs">
+                        <Button size="lg" variant="secondary" className="w-full sm:w-auto group">
+                          Explore Programs
+                          <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        </Button>
+                      </Link>
+                      <Link to="/research">
+                        <Button size="lg" variant="outline" className="w-full sm:w-auto bg-background/10 text-primary-foreground border-primary-foreground/30 hover:bg-background/20">
+                          View Research
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+        
+        {/* Dot Indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+          {heroSlides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => api?.scrollTo(index)}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                current === index 
+                  ? 'bg-primary-foreground w-8' 
+                  : 'bg-primary-foreground/40 hover:bg-primary-foreground/60'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent" />
+        
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent pointer-events-none" />
       </section>
 
       {/* About Section */}
