@@ -76,11 +76,11 @@ const Home = () => {
         >
           <CarouselContent className="h-full">
             {heroSlides.map((imagePath, index) => (
-              <CarouselItem key={index} className="">
+              <CarouselItem key={index} className="h-screen">
                 <img
                   src={imagePath}
                   alt={`Slide ${index + 1}`}
-                  className="w-full h-full object-cover object-bottom"
+                  className="w-full h-full object-cover object-top"
                 />
               </CarouselItem>
             ))}
@@ -104,7 +104,7 @@ const Home = () => {
         </div>
          <div className="container mx-auto px-4 z-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="max-w-3xl">
-            <h1 className="text-3xl md:text-6xl font-bold text-slate-100 animate-fade-in text-center mb-14 md:mb-6">
+            <h1 className="text-3xl md:text-6xl font-bold text-slate-100 animate-fade-in mb-14 md:mb-6 text-left">
               Department of Electronic & Computer Engineering
             </h1>
             <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 animate-fade-in text-center md:text-left">

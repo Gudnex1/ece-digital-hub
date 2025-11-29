@@ -87,15 +87,16 @@ const Infrastructure = () => {
       <Header />
 
       {/* Page Header */}
-      <section className="bg-hero-gradient py-16 md:py-20">
+      <section className="bg-gradient-to-r from-slate-900 to-gray-500 dark:bg-gradient-to-r dark:from-gray-600 dark:to-slate-800 py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
               Infrastructure & Facilities
             </h1>
             <p className="text-lg text-primary-foreground/90">
-              Our department is equipped with world-class laboratories and cutting-edge equipment 
-              to provide hands-on experience and foster innovation.
+              Our department is equipped with world-class laboratories and
+              cutting-edge equipment to provide hands-on experience and foster
+              innovation.
             </p>
           </div>
         </div>
@@ -109,14 +110,17 @@ const Infrastructure = () => {
               Specialized Laboratories
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Our state-of-the-art labs provide students with practical experience using 
-              industry-standard tools and equipment
+              Our state-of-the-art labs provide students with practical
+              experience using industry-standard tools and equipment
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {facilities.map((facility, index) => (
-              <Card key={index} className="border-border hover:shadow-lg transition-shadow">
+              <Card
+                key={index}
+                className="border-border hover:shadow-lg transition-shadow"
+              >
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-3 rounded-lg">
@@ -135,7 +139,10 @@ const Infrastructure = () => {
                         </p>
                         <ul className="space-y-1">
                           {facility.equipment.map((item, idx) => (
-                            <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                            <li
+                              key={idx}
+                              className="text-sm text-muted-foreground flex items-start gap-2"
+                            >
                               <span className="text-primary mt-1">•</span>
                               <span>{item}</span>
                             </li>
