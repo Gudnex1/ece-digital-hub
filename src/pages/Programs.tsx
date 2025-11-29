@@ -8,7 +8,7 @@ const Programs = () => {
   const programs = [
     {
       title: 'BSc in Electronics and Computer Engineering',
-      duration: '4 Years',
+      duration: '5 Years',
       overview: 'A comprehensive program combining electronics and computer engineering principles, preparing students for careers in integrated systems design, embedded systems, and digital electronics.',
       careers: [
         'Embedded Systems Engineer',
@@ -20,7 +20,7 @@ const Programs = () => {
     },
     {
       title: 'BSc in Computer Engineering',
-      duration: '4 Years',
+      duration: '5 Years',
       overview: 'Focused on computer systems, software engineering, and digital technologies. Students gain expertise in computer architecture, operating systems, and software development.',
       careers: [
         'Software Engineer',
@@ -32,7 +32,7 @@ const Programs = () => {
     },
     {
       title: 'BSc in Electronics Engineering',
-      duration: '4 Years',
+      duration: '5 Years',
       overview: 'Specializes in electronic circuits, signal processing, and communication systems. Prepares students for careers in electronics design, telecommunications, and power electronics.',
       careers: [
         'Electronics Design Engineer',
@@ -57,15 +57,16 @@ const Programs = () => {
       <Header />
 
       {/* Page Header */}
-      <section className="bg-hero-gradient py-16 md:py-20">
+      <section className="bg-gradient-to-r from-slate-900 to-gray-500 dark:bg-gradient-to-r dark:from-gray-600 dark:to-slate-800 py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
               Degree Programs
             </h1>
             <p className="text-lg text-primary-foreground/90">
-              Choose from our specialized undergraduate programs designed to prepare you 
-              for successful careers in electronics and computer engineering.
+              Choose from our specialized undergraduate programs designed to
+              prepare you for successful careers in electronics and computer
+              engineering.
             </p>
           </div>
         </div>
@@ -76,7 +77,10 @@ const Programs = () => {
         <div className="container mx-auto px-4">
           <div className="space-y-8">
             {programs.map((program, index) => (
-              <Card key={index} className="border-border hover:shadow-xl transition-all">
+              <Card
+                key={index}
+                className="border-border hover:shadow-xl transition-all"
+              >
                 <CardContent className="p-0">
                   <div className="grid lg:grid-cols-3 gap-0">
                     {/* Program Header */}
@@ -114,7 +118,9 @@ const Programs = () => {
                         {program.careers.map((career, idx) => (
                           <li key={idx} className="flex items-start gap-2">
                             <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                            <span className="text-muted-foreground">{career}</span>
+                            <span className="text-muted-foreground">
+                              {career}
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -127,20 +133,25 @@ const Programs = () => {
                       </h4>
                       <div className="space-y-4 text-sm">
                         <div>
-                          <p className="text-muted-foreground mb-1">Degree Type</p>
-                          <p className="font-medium text-foreground">Bachelor of Science</p>
+                          <p className="text-muted-foreground mb-1">
+                            Degree Type
+                          </p>
+                          <p className="font-medium text-foreground">
+                            Bachelor of Science
+                          </p>
                         </div>
                         <div>
                           <p className="text-muted-foreground mb-1">Duration</p>
-                          <p className="font-medium text-foreground">{program.duration} Full-Time</p>
+                          <p className="font-medium text-foreground">
+                            {program.duration} Full-Time
+                          </p>
                         </div>
-                        <div>
-                          <p className="text-muted-foreground mb-1">Credits</p>
-                          <p className="font-medium text-foreground">120 Credits</p>
-                        </div>
+
                         <div>
                           <p className="text-muted-foreground mb-1">Format</p>
-                          <p className="font-medium text-foreground">On-Campus</p>
+                          <p className="font-medium text-foreground">
+                            On-Campus
+                          </p>
                         </div>
                         <Button className="w-full mt-4 bg-primary text-primary-foreground hover:bg-primary/90">
                           Apply Now
@@ -183,9 +194,9 @@ const Programs = () => {
 
                 <div className="mt-8 p-6 bg-primary/5 rounded-lg">
                   <p className="text-sm text-muted-foreground">
-                    <strong className="text-foreground">Note:</strong> Specific program requirements 
-                    may vary. Please contact our admissions office for detailed information and 
-                    application deadlines.
+                    <strong className="text-foreground">Note:</strong> Specific
+                    program requirements may vary. Please contact our admissions
+                    office for detailed information and application deadlines.
                   </p>
                 </div>
               </CardContent>

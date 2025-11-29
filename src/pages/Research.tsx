@@ -92,15 +92,15 @@ const Research = () => {
       <Header />
 
       {/* Page Header */}
-      <section className="bg-hero-gradient py-16 md:py-20">
+      <section className="bg-gradient-to-r from-slate-900 to-gray-500 dark:bg-gradient-to-r dark:from-gray-600 dark:to-slate-800 py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
               Research & Innovation
             </h1>
             <p className="text-lg text-primary-foreground/90">
-              Pushing the boundaries of technology through cutting-edge research and 
-              transformative innovations that address real-world challenges.
+              Pushing the boundaries of technology through cutting-edge research
+              and transformative innovations that address real-world challenges.
             </p>
           </div>
         </div>
@@ -164,7 +164,7 @@ const Research = () => {
                       <ChevronDown className="h-5 w-5 text-primary ml-4" />
                     )}
                   </Button>
-                  
+
                   {expandedArea === index && (
                     <div className="px-6 pb-6 animate-fade-in">
                       <div className="bg-muted/50 rounded-lg p-4 mt-2">
@@ -173,7 +173,10 @@ const Research = () => {
                         </p>
                         <ul className="space-y-2">
                           {area.projects.map((project, idx) => (
-                            <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                            <li
+                              key={idx}
+                              className="text-sm text-muted-foreground flex items-start gap-2"
+                            >
                               <span className="text-primary mt-1">•</span>
                               <span>{project}</span>
                             </li>
@@ -198,10 +201,14 @@ const Research = () => {
                 Interested in Collaborating?
               </h2>
               <p className="text-muted-foreground mb-6">
-                We welcome partnerships with industry, academic institutions, and research 
-                organizations. Contact us to explore collaboration opportunities.
+                We welcome partnerships with industry, academic institutions,
+                and research organizations. Contact us to explore collaboration
+                opportunities.
               </p>
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+              <Button
+                size="lg"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+              >
                 Get in Touch
               </Button>
             </CardContent>
