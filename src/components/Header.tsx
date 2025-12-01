@@ -35,7 +35,7 @@ const Header = () => {
     <header
       className={`sticky top-0 z-50 backdrop-blur transition-colors duration-300 ${
         isInHero && location.pathname === "/"
-          ? "bg-white/90 dark:bg-[#262626]"
+          ? "bg-gray-300/60 dark:bg-[#262626]"
           : "bg-background/10"
       }`}
     >
@@ -50,7 +50,7 @@ const Header = () => {
                 ECE Department
               </h1>
               <p className="text-xs text-muted-foreground hidden sm:block">
-                Electronics & Computer Engineering
+                Electronic & Computer Engineering
               </p>
             </div>
           </Link>
