@@ -73,7 +73,7 @@ const Home = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       {/* Hero Section */}
-      <section className="-z-10 relative w-full h-[91vh] overflow-hidden">
+      <section className="-z-10 relative w-full h-[400px] md:h-[91vh] overflow-hidden">
         {isLoading ? (
           <Skeleton className="w-full h-full rounded-none" />
         ) : (

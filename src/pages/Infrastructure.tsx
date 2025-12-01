@@ -98,7 +98,7 @@ const Infrastructure = () => {
       <Header />
 
       {/* Page Header */}
-      <section className="bg-gradient-to-r from-slate-900 to-gray-500 dark:bg-gradient-to-r dark:from-gray-600 dark:to-slate-800 py-16 md:py-20">
+      <section className="bg-gradient-to-r from-blue-900 to-purple-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-slate-800 py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
@@ -127,69 +127,67 @@ const Infrastructure = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {isLoading ? (
-              Array.from({ length: 6 }).map((_, index) => (
-                <Card key={index} className="border-border">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <Skeleton className="w-12 h-12 rounded-lg" />
-                      <div className="flex-1">
-                        <Skeleton className="h-6 w-3/4 mb-3" />
-                        <Skeleton className="h-4 w-full mb-2" />
-                        <Skeleton className="h-4 w-5/6 mb-4" />
-                        <div className="bg-muted/50 rounded-lg p-4">
-                          <Skeleton className="h-4 w-1/3 mb-2" />
-                          <div className="space-y-1">
-                            <Skeleton className="h-3 w-full" />
-                            <Skeleton className="h-3 w-4/5" />
-                            <Skeleton className="h-3 w-5/6" />
+            {isLoading
+              ? Array.from({ length: 6 }).map((_, index) => (
+                  <Card key={index} className="border-border">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        <Skeleton className="w-12 h-12 rounded-lg" />
+                        <div className="flex-1">
+                          <Skeleton className="h-6 w-3/4 mb-3" />
+                          <Skeleton className="h-4 w-full mb-2" />
+                          <Skeleton className="h-4 w-5/6 mb-4" />
+                          <div className="bg-muted/50 rounded-lg p-4">
+                            <Skeleton className="h-4 w-1/3 mb-2" />
+                            <div className="space-y-1">
+                              <Skeleton className="h-3 w-full" />
+                              <Skeleton className="h-3 w-4/5" />
+                              <Skeleton className="h-3 w-5/6" />
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            ) : (
-              facilities.map((facility, index) => (
-                <Card
-                  key={index}
-                  className="border-border hover:shadow-lg transition-shadow"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-primary/10 p-3 rounded-lg">
-                        <facility.icon className="h-6 w-6 text-primary" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-foreground mb-2">
-                          {facility.title}
-                        </h3>
-                        <p className="text-muted-foreground mb-4">
-                          {facility.description}
-                        </p>
-                        <div className="bg-muted/50 rounded-lg p-4">
-                          <p className="text-sm font-medium text-foreground mb-2">
-                            Key Equipment:
+                    </CardContent>
+                  </Card>
+                ))
+              : facilities.map((facility, index) => (
+                  <Card
+                    key={index}
+                    className="border-border hover:shadow-lg transition-shadow"
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="bg-primary/10 p-3 rounded-lg">
+                          <facility.icon className="h-6 w-6 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-xl font-semibold text-foreground mb-2">
+                            {facility.title}
+                          </h3>
+                          <p className="text-muted-foreground mb-4">
+                            {facility.description}
                           </p>
-                          <ul className="space-y-1">
-                            {facility.equipment.map((item, idx) => (
-                              <li
-                                key={idx}
-                                className="text-sm text-muted-foreground flex items-start gap-2"
-                              >
-                                <span className="text-primary mt-1">•</span>
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
+                          <div className="bg-muted/50 rounded-lg p-4">
+                            <p className="text-sm font-medium text-foreground mb-2">
+                              Key Equipment:
+                            </p>
+                            <ul className="space-y-1">
+                              {facility.equipment.map((item, idx) => (
+                                <li
+                                  key={idx}
+                                  className="text-sm text-muted-foreground flex items-start gap-2"
+                                >
+                                  <span className="text-primary mt-1">•</span>
+                                  <span>{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            )}
+                    </CardContent>
+                  </Card>
+                ))}
           </div>
         </div>
       </section>
