@@ -1,15 +1,18 @@
 import { ArrowRight, Lightbulb, Users, Award, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import { useState, useEffect } from 'react';
+
 const Home = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!api) return;
@@ -20,6 +23,15 @@ const Home = () => {
       setCurrent(api.selectedScrollSnap());
     });
   }, [api]);
+
+  useEffect(() => {
+    // Simulate loading state
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const heroSlides = [
     '/carousel/slide1.jpg',
@@ -51,28 +63,32 @@ const Home = () => {
       
       {/* Hero Section */}
       <section className="relative w-full h-[91vh] overflow-hidden">
-        <Carousel
-          setApi={setApi}
-          opts={{ loop: true }}
-          plugins={[
-            Autoplay({
-              delay: 4500,
-            }),
-          ]}
-          className="w-full h-full"
-        >
-          <CarouselContent className="h-full">
-            {heroSlides.map((imagePath, index) => (
-              <CarouselItem key={index} className="h-screen">
-                <img
-                  src={imagePath}
-                  alt={`Slide ${index + 1}`}
-                  className="w-full h-full object-cover object-top"
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+        {isLoading ? (
+          <Skeleton className="w-full h-full rounded-none" />
+        ) : (
+          <Carousel
+            setApi={setApi}
+            opts={{ loop: true }}
+            plugins={[
+              Autoplay({
+                delay: 4500,
+              }),
+            ]}
+            className="w-full h-full"
+          >
+            <CarouselContent className="h-full">
+              {heroSlides.map((imagePath, index) => (
+                <CarouselItem key={index} className="h-screen">
+                  <img
+                    src={imagePath}
+                    alt={`Slide ${index + 1}`}
+                    className="w-full h-full object-cover object-top"
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        )}
 
         {/* Dot Indicators */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
@@ -140,24 +156,37 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <Card
-                key={index}
-                className="border-border hover:shadow-lg transition-shadow"
-              >
-                <CardContent className="p-6">
-                  <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+                <Card key={index} className="border-border">
+                  <CardContent className="p-6">
+                    <Skeleton className="w-12 h-12 rounded-lg mb-4" />
+                    <Skeleton className="h-6 w-3/4 mb-2" />
+                    <Skeleton className="h-4 w-full mb-1" />
+                    <Skeleton className="h-4 w-5/6" />
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              features.map((feature, index) => (
+                <Card
+                  key={index}
+                  className="border-border hover:shadow-lg transition-shadow"
+                >
+                  <CardContent className="p-6">
+                    <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                      <feature.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {feature.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </section>
@@ -166,33 +195,48 @@ const Home = () => {
       <section className="py-16 md:py-24 bg-muted">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <Card className="border-border">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-foreground mb-4">
-                  Our Vision
-                </h3>
-                <p className="text-muted-foreground">
-                  To be a globally recognized center of excellence in
-                  electronics and computer engineering education and research,
-                  producing innovative engineers who drive technological
-                  advancement and contribute to society's progress.
-                </p>
-              </CardContent>
-            </Card>
+            {isLoading ? (
+              Array.from({ length: 2 }).map((_, index) => (
+                <Card key={index} className="border-border">
+                  <CardContent className="p-8">
+                    <Skeleton className="h-8 w-1/2 mb-4" />
+                    <Skeleton className="h-4 w-full mb-2" />
+                    <Skeleton className="h-4 w-full mb-2" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <>
+                <Card className="border-border">
+                  <CardContent className="p-8">
+                    <h3 className="text-2xl font-bold text-foreground mb-4">
+                      Our Vision
+                    </h3>
+                    <p className="text-muted-foreground">
+                      To be a globally recognized center of excellence in
+                      electronics and computer engineering education and research,
+                      producing innovative engineers who drive technological
+                      advancement and contribute to society's progress.
+                    </p>
+                  </CardContent>
+                </Card>
 
-            <Card className="border-border">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-foreground mb-4">
-                  Our Mission
-                </h3>
-                <p className="text-muted-foreground">
-                  To provide world-class education that combines theoretical
-                  knowledge with practical skills, foster cutting-edge research,
-                  and maintain strong industry partnerships to ensure our
-                  graduates are well-prepared for global challenges.
-                </p>
-              </CardContent>
-            </Card>
+                <Card className="border-border">
+                  <CardContent className="p-8">
+                    <h3 className="text-2xl font-bold text-foreground mb-4">
+                      Our Mission
+                    </h3>
+                    <p className="text-muted-foreground">
+                      To provide world-class education that combines theoretical
+                      knowledge with practical skills, foster cutting-edge research,
+                      and maintain strong industry partnerships to ensure our
+                      graduates are well-prepared for global challenges.
+                    </p>
+                  </CardContent>
+                </Card>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -211,47 +255,65 @@ const Home = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            <Card className="border-border">
-              <CardContent className="p-6">
-                <h4 className="font-semibold text-foreground mb-3">
-                  Technology Sector
-                </h4>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>• Software Engineer</li>
-                  <li>• Hardware Engineer</li>
-                  <li>• Systems Architect</li>
-                  <li>• Embedded Systems Developer</li>
-                </ul>
-              </CardContent>
-            </Card>
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <Card key={index} className="border-border">
+                  <CardContent className="p-6">
+                    <Skeleton className="h-6 w-2/3 mb-3" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-5/6" />
+                      <Skeleton className="h-4 w-4/5" />
+                      <Skeleton className="h-4 w-full" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <>
+                <Card className="border-border">
+                  <CardContent className="p-6">
+                    <h4 className="font-semibold text-foreground mb-3">
+                      Technology Sector
+                    </h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>• Software Engineer</li>
+                      <li>• Hardware Engineer</li>
+                      <li>• Systems Architect</li>
+                      <li>• Embedded Systems Developer</li>
+                    </ul>
+                  </CardContent>
+                </Card>
 
-            <Card className="border-border">
-              <CardContent className="p-6">
-                <h4 className="font-semibold text-foreground mb-3">
-                  Research & Academia
-                </h4>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>• Research Scientist</li>
-                  <li>• PhD Programs</li>
-                  <li>• University Faculty</li>
-                  <li>• R&D Engineer</li>
-                </ul>
-              </CardContent>
-            </Card>
+                <Card className="border-border">
+                  <CardContent className="p-6">
+                    <h4 className="font-semibold text-foreground mb-3">
+                      Research & Academia
+                    </h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>• Research Scientist</li>
+                      <li>• PhD Programs</li>
+                      <li>• University Faculty</li>
+                      <li>• R&D Engineer</li>
+                    </ul>
+                  </CardContent>
+                </Card>
 
-            <Card className="border-border">
-              <CardContent className="p-6">
-                <h4 className="font-semibold text-foreground mb-3">
-                  Specialized Fields
-                </h4>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>• IoT Specialist</li>
-                  <li>• VLSI Design Engineer</li>
-                  <li>• Network Engineer</li>
-                  <li>• AI/ML Engineer</li>
-                </ul>
-              </CardContent>
-            </Card>
+                <Card className="border-border">
+                  <CardContent className="p-6">
+                    <h4 className="font-semibold text-foreground mb-3">
+                      Specialized Fields
+                    </h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>• IoT Specialist</li>
+                      <li>• VLSI Design Engineer</li>
+                      <li>• Network Engineer</li>
+                      <li>• AI/ML Engineer</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </>
+            )}
           </div>
         </div>
       </section>
