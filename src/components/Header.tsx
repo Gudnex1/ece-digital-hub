@@ -35,7 +35,7 @@ const Header = () => {
     <header
       className={`sticky top-0 z-50 backdrop-blur transition-colors duration-300 ${
         isInHero && location.pathname === "/"
-          ? "bg-white/90 dark:bg-[#262626]/90"
+          ? "bg-white/90 dark:bg-[#262626]"
           : "bg-background/10"
       }`}
     >
