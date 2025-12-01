@@ -1,31 +1,12 @@
-<<<<<<< HEAD
-import { ArrowRight, Lightbulb, Users, Award, TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Link } from "react-router-dom";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  type CarouselApi,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import { useState, useEffect } from "react";
-import slide1 from "/public/carousel/slide1.jpg";
-import slide2 from "/public/carousel/slide2.jpg";
-import slide3 from "/public/carousel/slide3.jpg";
-
-=======
-import { Lightbulb, Users, Award, TrendingUp } from 'lucide-react';
+import { ArrowRight, Lightbulb, Users, Award, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import { useState, useEffect } from 'react';
->>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
 const Home = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -35,48 +16,15 @@ const Home = () => {
 
     setCurrent(api.selectedScrollSnap());
 
-<<<<<<< HEAD
-    api.on("select", () => {
-=======
     api.on('select', () => {
->>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
       setCurrent(api.selectedScrollSnap());
     });
   }, [api]);
 
-<<<<<<< HEAD
-  const heroSlides = [slide1, slide2, slide3];
-  const features = [
-    {
-      icon: Lightbulb,
-      title: "Innovation & Research",
-      description:
-        "Cutting-edge research in AI, IoT, embedded systems, and digital electronics.",
-    },
-    {
-      icon: Users,
-      title: "Expert Faculty",
-      description:
-        "Learn from industry professionals and renowned academics with extensive experience.",
-    },
-    {
-      icon: Award,
-      title: "Industry Recognition",
-      description:
-        "Our graduates are highly sought after by leading technology companies worldwide.",
-    },
-    {
-      icon: TrendingUp,
-      title: "Career Growth",
-      description:
-        "95% placement rate with competitive packages in top tech companies.",
-    },
-=======
   const heroSlides = [
     '/carousel/slide1.jpg',
     '/carousel/slide2.jpg',
     '/carousel/slide3.jpg'
->>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
   ];
 
   const features = [{
@@ -96,56 +44,36 @@ const Home = () => {
     title: 'Career Growth',
     description: '95% placement rate with competitive packages in top tech companies.'
   }];
-  return <div className="min-h-screen flex flex-col">
+  
+  return (
+    <div className="min-h-screen flex flex-col">
       <Header />
-<<<<<<< HEAD
-
+      
       {/* Hero Section */}
       <section className="relative w-full h-[91vh] overflow-hidden">
-=======
-      
-      {/* Hero Section with Carousel */}
-      <section className="relative w-full h-[500px] md:h-[600px] overflow-hidden">
->>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
         <Carousel
           setApi={setApi}
           opts={{ loop: true }}
           plugins={[
             Autoplay({
-<<<<<<< HEAD
               delay: 4500,
-=======
-              delay: 5000,
->>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
             }),
           ]}
           className="w-full h-full"
         >
           <CarouselContent className="h-full">
             {heroSlides.map((imagePath, index) => (
-<<<<<<< HEAD
               <CarouselItem key={index} className="h-screen">
                 <img
                   src={imagePath}
                   alt={`Slide ${index + 1}`}
                   className="w-full h-full object-cover object-top"
-=======
-              <CarouselItem key={index} className="h-full">
-                <img 
-                  src={imagePath} 
-                  alt={`Slide ${index + 1}`}
-                  className="w-full h-full object-cover"
->>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
                 />
               </CarouselItem>
             ))}
           </CarouselContent>
         </Carousel>
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
         {/* Dot Indicators */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
           {heroSlides.map((_, index) => (
@@ -153,22 +81,15 @@ const Home = () => {
               key={index}
               onClick={() => api?.scrollTo(index)}
               className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-<<<<<<< HEAD
                 current === index
-                  ? "bg-white w-8"
-                  : "bg-white/60 hover:bg-white/80"
-=======
-                current === index 
-                  ? 'bg-white w-8' 
+                  ? 'bg-white w-8'
                   : 'bg-white/60 hover:bg-white/80'
->>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
-<<<<<<< HEAD
         </div>
-         <div className="container mx-auto px-4 z-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="container mx-auto px-4 z-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="max-w-3xl">
             <h1 className="text-3xl md:text-6xl font-bold text-slate-100 animate-fade-in mb-14 md:mb-6 text-left">
               Department of Electronic & Computer Engineering
@@ -201,10 +122,6 @@ const Home = () => {
             </div>
           </div>
         </div>
- 
-=======
-        </div>
->>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
       </section>
 
       {/* About Section */}
@@ -223,15 +140,11 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-<<<<<<< HEAD
             {features.map((feature, index) => (
               <Card
                 key={index}
                 className="border-border hover:shadow-lg transition-shadow"
               >
-=======
-            {features.map((feature, index) => <Card key={index} className="border-border hover:shadow-lg transition-shadow">
->>>>>>> 238ebaf5ea88ae48f95fd7f3c1e72c5eb0396b20
                 <CardContent className="p-6">
                   <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
                     <feature.icon className="h-6 w-6 text-primary" />
@@ -243,7 +156,8 @@ const Home = () => {
                     {feature.description}
                   </p>
                 </CardContent>
-              </Card>)}
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -343,6 +257,8 @@ const Home = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Home;
