@@ -10,7 +10,8 @@ import Lecturers from "./pages/Lecturers";
 import Infrastructure from "./pages/Infrastructure";
 import Research from "./pages/Research";
 import Programs from "./pages/Programs";
-import Events from "./pages/Events";
+// import Events from "./pages/Events";
+
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

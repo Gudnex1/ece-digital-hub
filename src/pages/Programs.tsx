@@ -12,7 +12,6 @@ const Programs = () => {
     {
       title: 'BSc in Electronics and Computer Engineering',
       duration: '5 Years',
-      duration: '5 Years',
       overview: 'A comprehensive program combining electronics and computer engineering principles, preparing students for careers in integrated systems design, embedded systems, and digital electronics.',
       careers: [
         'Embedded Systems Engineer',
@@ -213,7 +212,7 @@ const Programs = () => {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            )))}
           </div>
         </div>
       </section>

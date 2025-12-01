@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, GraduationCap } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, GraduationCap } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,16 +9,16 @@ const Header = () => {
   const location = useLocation();
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Lecturers', path: '/lecturers' },
-    { name: 'Infrastructure', path: '/infrastructure' },
-    { name: 'Research', path: '/research' },
-    { name: 'Degree Programs', path: '/programs' },
-    { name: 'Events & News', path: '/events' },
+    { name: "Home", path: "/" },
+    { name: "Lecturers", path: "/lecturers" },
+    { name: "Infrastructure", path: "/infrastructure" },
+    { name: "Research", path: "/research" },
+    { name: "Degree Programs", path: "/programs" },
+    { name: "Events & News", path: "/events" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
-  
+
   useEffect(() => {
     const handleScroll = () => {
       const heroHeight = window.innerHeight * 0.91; // 91vh hero section
@@ -72,7 +72,11 @@ const Header = () => {
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {isMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </Button>
         </div>
 
