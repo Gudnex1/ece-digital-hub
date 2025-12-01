@@ -69,10 +69,10 @@ const Lecturers = () => {
       <section className="bg-gradient-to-r from-blue-900 to-purple-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-slate-800 py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Our Faculty
             </h1>
-            <p className="text-lg text-primary-foreground/90">
+            <p className="text-lg text-white">
               Meet our distinguished faculty members who are leaders in their
               fields, combining academic excellence with industry experience.
             </p>

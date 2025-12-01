@@ -87,13 +87,13 @@ const Infrastructure = () => {
       <Header />
 
       {/* Page Header */}
-      <section className="bg-gradient-to-r from-slate-900 to-gray-500 dark:bg-gradient-to-r dark:from-gray-600 dark:to-slate-800 py-16 md:py-20">
+      <section className="bg-gradient-to-r from-blue-900 to-purple-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-slate-800 py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Infrastructure & Facilities
             </h1>
-            <p className="text-lg text-primary-foreground/90">
+            <p className="text-lg text-white">
               Our department is equipped with world-class laboratories and
               cutting-edge equipment to provide hands-on experience and foster
               innovation.
