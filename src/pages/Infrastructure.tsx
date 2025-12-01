@@ -1,9 +1,12 @@
 import { Cpu, Microscope, Monitor, Wifi, Database, Zap } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { useState, useEffect } from 'react';
 
 const Infrastructure = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const facilities = [
     {
       icon: Cpu,
@@ -82,21 +85,28 @@ const Infrastructure = () => {
     '24/7 Laboratory Access for Research Students',
   ];
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 700);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
 
       {/* Page Header */}
-      <section className="bg-gradient-to-r from-blue-900 to-purple-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-slate-800 py-16 md:py-20">
+      <section className="bg-hero-gradient py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Infrastructure & Facilities
             </h1>
-            <p className="text-lg text-white">
-              Our department is equipped with world-class laboratories and
-              cutting-edge equipment to provide hands-on experience and foster
-              innovation.
+            <p className="text-lg text-primary-foreground/90">
+              Our department is equipped with world-class laboratories and cutting-edge equipment 
+              to provide hands-on experience and foster innovation.
             </p>
           </div>
         </div>
@@ -117,10 +127,7 @@ const Infrastructure = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {facilities.map((facility, index) => (
-              <Card
-                key={index}
-                className="border-border hover:shadow-lg transition-shadow"
-              >
+              <Card key={index} className="border-border hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-3 rounded-lg">
@@ -139,10 +146,7 @@ const Infrastructure = () => {
                         </p>
                         <ul className="space-y-1">
                           {facility.equipment.map((item, idx) => (
-                            <li
-                              key={idx}
-                              className="text-sm text-muted-foreground flex items-start gap-2"
-                            >
+                            <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
                               <span className="text-primary mt-1">•</span>
                               <span>{item}</span>
                             </li>

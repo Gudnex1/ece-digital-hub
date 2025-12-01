@@ -1,9 +1,12 @@
 import { Mail, GraduationCap } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { useState, useEffect } from 'react';
 
 const Lecturers = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const lecturers = [
     {
       name: 'Dr. Shoewu',
@@ -61,6 +64,14 @@ const Lecturers = () => {
     },
   ];
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -72,9 +83,9 @@ const Lecturers = () => {
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Our Faculty
             </h1>
-            <p className="text-lg text-white">
-              Meet our distinguished faculty members who are leaders in their
-              fields, combining academic excellence with industry experience.
+            <p className="text-lg text-primary-foreground/90">
+              Meet our distinguished faculty members who are leaders in their fields, 
+              combining academic excellence with industry experience.
             </p>
           </div>
         </div>
@@ -85,10 +96,7 @@ const Lecturers = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {lecturers.map((lecturer, index) => (
-              <Card
-                key={index}
-                className="border-border hover:shadow-lg transition-all hover:-translate-y-1"
-              >
+              <Card key={index} className="border-border hover:shadow-lg transition-all hover:-translate-y-1">
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-3 rounded-full">

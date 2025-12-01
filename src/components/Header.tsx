@@ -1,22 +1,20 @@
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X, GraduationCap, Moon, Sun } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTheme } from "next-themes";
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, GraduationCap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
-  const { theme, setTheme } = useTheme();
   const [isInHero, setIsInHero] = useState(true);
+  const location = useLocation();
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Lecturers", path: "/lecturers" },
-    { name: "Infrastructure", path: "/infrastructure" },
-    { name: "Research", path: "/research" },
-    { name: "Degree Programs", path: "/programs" },
-    // { name: 'Events & News', path: '/events' },
+    { name: 'Home', path: '/' },
+    { name: 'Lecturers', path: '/lecturers' },
+    { name: 'Infrastructure', path: '/infrastructure' },
+    { name: 'Research', path: '/research' },
+    { name: 'Degree Programs', path: '/programs' },
+    { name: 'Events & News', path: '/events' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -32,14 +30,8 @@ const Header = () => {
   }, []);
 
   return (
-    <header
-      className={`sticky top-0 z-50 backdrop-blur transition-colors duration-300 ${
-        isInHero && location.pathname === "/"
-          ? "bg-white/90 dark:bg-[#262626]/90"
-          : "bg-background/10"
-      }`}
-    >
-      <div className="container mx-auto px-4 py-5">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+      <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group">
             <div className="bg-hero-gradient p-2 rounded-lg transition-transform group-hover:scale-105">
@@ -71,45 +63,17 @@ const Header = () => {
                 )}
               </Link>
             ))}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="ml-2"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-            </Button>
           </nav>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center gap-2 md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
         </div>
 
         {/* Mobile Navigation */}

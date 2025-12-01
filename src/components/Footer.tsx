@@ -21,30 +21,29 @@ const Footer = () => {
 
           {/* Contact Information */}
           <div>
-            <h3 className="text-lg font-bold text-white mb-4">Contact Us</h3>
+            <h3 className="text-lg font-bold text-foreground mb-4">Contact Us</h3>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <MapPin className="h-5 w-5 text-white mt-0.5" />
-                <p className="text-sm text-slate-400">
-                  Department of Electronics & Computer Engineering
+                <MapPin className="h-5 w-5 text-primary mt-0.5" />
+                <p className="text-sm text-muted-foreground">
+                  Department of Electronics & Computer Engineering<br />
+                  University Campus
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <Phone className="h-5 w-5 text-white" />
-                <p className="text-sm text-slate-400">+1 (555) 123-4567</p>
+                <Phone className="h-5 w-5 text-primary" />
+                <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
               </div>
               <div className="flex items-center gap-3">
-                <Mail className="h-5 w-5 text-white" />
-                <p className="text-sm text-slate-400">ece@university.edu</p>
-
+                <Mail className="h-5 w-5 text-primary" />
+                <p className="text-sm text-muted-foreground">ece@university.edu</p>
               </div>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-bold text-white mb-4">Quick Links</h3>
-
+            <h3 className="text-lg font-bold text-foreground mb-4">Quick Links</h3>
             <div className="space-y-2">
               <a href="/" className="block text-sm text-slate-400 hover:text-white transition-colors">
                 Home
