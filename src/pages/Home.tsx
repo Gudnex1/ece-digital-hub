@@ -1,6 +1,7 @@
 import { ArrowRight, Lightbulb, Users, Award, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -19,6 +20,7 @@ import slide3 from "/public/carousel/slide3.jpg";
 const Home = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!api) return;
@@ -29,6 +31,15 @@ const Home = () => {
       setCurrent(api.selectedScrollSnap());
     });
   }, [api]);
+
+  useEffect(() => {
+    // Simulate loading state
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const heroSlides = [slide1, slide2, slide3];
   const features = [
@@ -58,33 +69,38 @@ const Home = () => {
     },
   ];
 
-  return <div className="min-h-screen flex flex-col">
+  return (
+    <div className="min-h-screen flex flex-col">
       <Header />
-
       {/* Hero Section */}
-      <section className="relative w-full h-[91vh] overflow-hidden">
-        <Carousel
-          setApi={setApi}
-          opts={{ loop: true }}
-          plugins={[
-            Autoplay({
-              delay: 4500,
-            }),
-          ]}
-          className="w-full h-full"
-        >
-          <CarouselContent className="h-full">
-            {heroSlides.map((imagePath, index) => (
-              <CarouselItem key={index} className="h-screen">
-                <img
-                  src={imagePath}
-                  alt={`Slide ${index + 1}`}
-                  className="w-full h-full object-cover object-top"
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+      <section className="-z-10 relative w-full h-[91vh] overflow-hidden">
+        {isLoading ? (
+          <Skeleton className="w-full h-full rounded-none" />
+        ) : (
+          <Carousel
+            setApi={setApi}
+            opts={{ loop: true }}
+            plugins={[
+              Autoplay({
+                delay: 4500,
+              }),
+            ]}
+            className="w-full h-full"
+          >
+            <CarouselContent className="h-full">
+              {heroSlides.map((imagePath, index) => (
+                <CarouselItem key={index} className="h-screen">
+                  <img
+                    src={imagePath}
+                    alt={`Slide ${index + 1}`}
+                    className="w-full h-full object-cover object-top"
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        )}
+
         {/* Dot Indicators */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
           {heroSlides.map((_, index) => (
@@ -100,12 +116,12 @@ const Home = () => {
             />
           ))}
         </div>
-         <div className="container mx-auto px-4 z-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="container mx-auto px-4 z-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="max-w-3xl">
             <h1 className="text-3xl md:text-6xl font-bold text-slate-100 animate-fade-in mb-14 md:mb-6 text-left">
               Department of Electronic & Computer Engineering
             </h1>
-            <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 animate-fade-in text-center md:text-left">
+            <p className="text-lg md:text-xl text-white mb-8 animate-fade-in text-center md:text-left">
               Pioneering the future of technology through innovative education,
               groundbreaking research, and industry collaboration. Join us in
               shaping tomorrow's engineering solutions.
@@ -115,7 +131,7 @@ const Home = () => {
                 <Button
                   size="lg"
                   variant="secondary"
-                  className="w-full sm:w-auto group"
+                  className="w-full sm:w-auto group dark:bg-white/50 dark:text-black/60"
                 >
                   Explore Programs
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -133,7 +149,6 @@ const Home = () => {
             </div>
           </div>
         </div>
- 
       </section>
 
       {/* About Section */}
@@ -152,23 +167,35 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <Card
-                key={index}
-                className="border-border hover:shadow-lg transition-shadow"
-              >
-                <CardContent className="p-6">
-                  <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>))}
+            {isLoading
+              ? Array.from({ length: 4 }).map((_, index) => (
+                  <Card key={index} className="border-border">
+                    <CardContent className="p-6">
+                      <Skeleton className="w-12 h-12 rounded-lg mb-4" />
+                      <Skeleton className="h-6 w-3/4 mb-2" />
+                      <Skeleton className="h-4 w-full mb-1" />
+                      <Skeleton className="h-4 w-5/6" />
+                    </CardContent>
+                  </Card>
+                ))
+              : features.map((feature, index) => (
+                  <Card
+                    key={index}
+                    className="border-border hover:shadow-lg transition-shadow"
+                  >
+                    <CardContent className="p-6">
+                      <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <feature.icon className="h-6 w-6 text-primary" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground mb-2">
+                        {feature.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {feature.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
           </div>
         </div>
       </section>
@@ -268,6 +295,7 @@ const Home = () => {
       </section>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
 export default Home;

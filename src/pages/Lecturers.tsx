@@ -1,9 +1,12 @@
 import { Mail, GraduationCap } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { useState, useEffect } from 'react';
 
 const Lecturers = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const lecturers = [
     {
       name: 'Dr. Shoewu',
@@ -61,6 +64,14 @@ const Lecturers = () => {
     },
   ];
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -84,47 +95,65 @@ const Lecturers = () => {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {lecturers.map((lecturer, index) => (
-              <Card
-                key={index}
-                className="border-border hover:shadow-lg transition-all hover:-translate-y-1"
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-3 rounded-full">
-                      <GraduationCap className="h-6 w-6 text-primary" />
+            {isLoading ? (
+              Array.from({ length: 9 }).map((_, index) => (
+                <Card key={index} className="border-border">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <Skeleton className="w-12 h-12 rounded-full" />
+                      <div className="flex-1">
+                        <Skeleton className="h-6 w-3/4 mb-2" />
+                        <Skeleton className="h-4 w-1/2 mb-3" />
+                        <Skeleton className="h-4 w-full mb-2" />
+                        <Skeleton className="h-4 w-2/3" />
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-foreground mb-1">
-                        {lecturer.name}
-                      </h3>
-                      <p className="text-sm text-primary font-medium mb-2">
-                        {lecturer.role}
-                      </p>
-                      <div className="space-y-2">
-                        <div>
-                          <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
-                            Specialization
-                          </p>
-                          <p className="text-sm text-foreground">
-                            {lecturer.specialization}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2 pt-2">
-                          <Mail className="h-4 w-4 text-muted-foreground" />
-                          <a
-                            href={`mailto:${lecturer.email}`}
-                            className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            {lecturer.email}
-                          </a>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              lecturers.map((lecturer, index) => (
+                <Card
+                  key={index}
+                  className="border-border hover:shadow-lg transition-all hover:-translate-y-1"
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="bg-primary/10 p-3 rounded-full">
+                        <GraduationCap className="h-6 w-6 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-foreground mb-1">
+                          {lecturer.name}
+                        </h3>
+                        <p className="text-sm text-primary font-medium mb-2">
+                          {lecturer.role}
+                        </p>
+                        <div className="space-y-2">
+                          <div>
+                            <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                              Specialization
+                            </p>
+                            <p className="text-sm text-foreground">
+                              {lecturer.specialization}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2 pt-2">
+                            <Mail className="h-4 w-4 text-muted-foreground" />
+                            <a
+                              href={`mailto:${lecturer.email}`}
+                              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                            >
+                              {lecturer.email}
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </section>

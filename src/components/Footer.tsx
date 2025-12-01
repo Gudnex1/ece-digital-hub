@@ -1,8 +1,8 @@
 import { Mail, Phone, MapPin, GraduationCap } from 'lucide-react';
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 border-t border-border mt-auto">
-      <div className="container mx-auto px-4 py-12">
+    <footer className="bg-card border-t border-border mt-auto">
+      <div className="container mx-auto px-4 py-12 text-white bg-[#3f3e3e]">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About Section */}
           <div>

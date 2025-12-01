@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, Award, BookOpen, Users } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const Research = () => {
   const [expandedArea, setExpandedArea] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const researchAreas = [
     {
@@ -87,6 +89,14 @@ const Research = () => {
     setExpandedArea(expandedArea === index ? null : index);
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 650);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -110,21 +120,34 @@ const Research = () => {
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {achievements.map((achievement, index) => (
-              <Card key={index} className="border-border text-center">
-                <CardContent className="p-6">
-                  <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <achievement.icon className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground mb-2">
-                    {achievement.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {achievement.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <Card key={index} className="border-border text-center">
+                  <CardContent className="p-6">
+                    <Skeleton className="w-16 h-16 rounded-full mx-auto mb-4" />
+                    <Skeleton className="h-6 w-2/3 mx-auto mb-2" />
+                    <Skeleton className="h-4 w-full mb-1" />
+                    <Skeleton className="h-4 w-4/5 mx-auto" />
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              achievements.map((achievement, index) => (
+                <Card key={index} className="border-border text-center">
+                  <CardContent className="p-6">
+                    <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <achievement.icon className="h-8 w-8 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground mb-2">
+                      {achievement.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {achievement.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </section>
@@ -142,52 +165,69 @@ const Research = () => {
           </div>
 
           <div className="max-w-4xl mx-auto space-y-4">
-            {researchAreas.map((area, index) => (
-              <Card key={index} className="border-border overflow-hidden">
-                <CardContent className="p-0">
-                  <Button
-                    variant="ghost"
-                    className="w-full p-6 h-auto justify-between hover:bg-muted/50"
-                    onClick={() => toggleArea(index)}
-                  >
-                    <div className="text-left">
-                      <h3 className="text-lg font-semibold text-foreground mb-1">
-                        {area.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {area.description}
-                      </p>
-                    </div>
-                    {expandedArea === index ? (
-                      <ChevronUp className="h-5 w-5 text-primary ml-4" />
-                    ) : (
-                      <ChevronDown className="h-5 w-5 text-primary ml-4" />
-                    )}
-                  </Button>
-
-                  {expandedArea === index && (
-                    <div className="px-6 pb-6 animate-fade-in">
-                      <div className="bg-muted/50 rounded-lg p-4 mt-2">
-                        <p className="text-sm font-medium text-foreground mb-3">
-                          Current Projects:
-                        </p>
-                        <ul className="space-y-2">
-                          {area.projects.map((project, idx) => (
-                            <li
-                              key={idx}
-                              className="text-sm text-muted-foreground flex items-start gap-2"
-                            >
-                              <span className="text-primary mt-1">•</span>
-                              <span>{project}</span>
-                            </li>
-                          ))}
-                        </ul>
+            {isLoading ? (
+              Array.from({ length: 6 }).map((_, index) => (
+                <Card key={index} className="border-border">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="flex-1">
+                        <Skeleton className="h-6 w-3/4 mb-2" />
+                        <Skeleton className="h-4 w-full mb-1" />
+                        <Skeleton className="h-4 w-5/6" />
                       </div>
+                      <Skeleton className="w-5 h-5" />
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              researchAreas.map((area, index) => (
+                <Card key={index} className="border-border overflow-hidden">
+                  <CardContent className="p-0">
+                    <Button
+                      variant="ghost"
+                      className="w-full p-6 h-auto justify-between hover:bg-muted/50"
+                      onClick={() => toggleArea(index)}
+                    >
+                      <div className="text-left">
+                        <h3 className="text-lg font-semibold text-foreground mb-1">
+                          {area.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {area.description}
+                        </p>
+                      </div>
+                      {expandedArea === index ? (
+                        <ChevronUp className="h-5 w-5 text-primary ml-4" />
+                      ) : (
+                        <ChevronDown className="h-5 w-5 text-primary ml-4" />
+                      )}
+                    </Button>
+
+                    {expandedArea === index && (
+                      <div className="px-6 pb-6 animate-fade-in">
+                        <div className="bg-muted/50 rounded-lg p-4 mt-2">
+                          <p className="text-sm font-medium text-foreground mb-3">
+                            Current Projects:
+                          </p>
+                          <ul className="space-y-2">
+                            {area.projects.map((project, idx) => (
+                              <li
+                                key={idx}
+                                className="text-sm text-muted-foreground flex items-start gap-2"
+                              >
+                                <span className="text-primary mt-1">•</span>
+                                <span>{project}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </section>
