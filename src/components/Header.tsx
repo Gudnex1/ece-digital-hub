@@ -1,30 +1,44 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X, GraduationCap, Moon, Sun } from "lucide-react";
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
-
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { theme, setTheme } = useTheme();
-
+  const [isInHero, setIsInHero] = useState(true);
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Lecturers', path: '/lecturers' },
-    { name: 'Infrastructure', path: '/infrastructure' },
-    { name: 'Research', path: '/research' },
-    { name: 'Degree Programs', path: '/programs' },
+    { name: "Home", path: "/" },
+    { name: "Lecturers", path: "/lecturers" },
+    { name: "Infrastructure", path: "/infrastructure" },
+    { name: "Research", path: "/research" },
+    { name: "Degree Programs", path: "/programs" },
     // { name: 'Events & News', path: '/events' },
- 
   ];
 
   const isActive = (path: string) => location.pathname === path;
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      const heroHeight = window.innerHeight * 0.91; // 91vh hero section
+      setIsInHero(window.scrollY < heroHeight);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-background/10 backdrop-blur">
+    <header
+      className={`sticky top-0 z-50 backdrop-blur transition-colors duration-300 ${
+        isInHero && location.pathname === "/"
+          ? "bg-white/90 dark:bg-[#262626]/90"
+          : "bg-background/10"
+      }`}
+    >
       <div className="container mx-auto px-4 py-5">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group">
@@ -64,7 +78,6 @@ const Header = () => {
               className="ml-2"
             >
               {theme === "dark" ? (
-   
                 <Sun className="h-5 w-5" />
               ) : (
                 <Moon className="h-5 w-5" />
@@ -80,7 +93,6 @@ const Header = () => {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
               {theme === "dark" ? (
-
                 <Sun className="h-5 w-5" />
               ) : (
                 <Moon className="h-5 w-5" />
@@ -96,7 +108,6 @@ const Header = () => {
               ) : (
                 <Menu className="h-5 w-5" />
               )}
-
             </Button>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { ArrowRight, Lightbulb, Users, Award, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -19,6 +20,7 @@ import slide3 from "/public/carousel/slide3.jpg";
 const Home = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!api) return;
@@ -29,6 +31,15 @@ const Home = () => {
       setCurrent(api.selectedScrollSnap());
     });
   }, [api]);
+
+  useEffect(() => {
+    // Simulate loading state
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const heroSlides = [slide1, slide2, slide3];
   const features = [
@@ -62,29 +73,33 @@ const Home = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       {/* Hero Section */}
-      <section className="relative w-full h-[91vh] overflow-hidden">
-        <Carousel
-          setApi={setApi}
-          opts={{ loop: true }}
-          plugins={[
-            Autoplay({
-              delay: 4500,
-            }),
-          ]}
-          className="w-full h-full"
-        >
-          <CarouselContent className="h-full">
-            {heroSlides.map((imagePath, index) => (
-              <CarouselItem key={index} className="h-screen">
-                <img
-                  src={imagePath}
-                  alt={`Slide ${index + 1}`}
-                  className="w-full h-full object-cover object-top"
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+      <section className="-z-10 relative w-full h-[91vh] overflow-hidden">
+        {isLoading ? (
+          <Skeleton className="w-full h-full rounded-none" />
+        ) : (
+          <Carousel
+            setApi={setApi}
+            opts={{ loop: true }}
+            plugins={[
+              Autoplay({
+                delay: 4500,
+              }),
+            ]}
+            className="w-full h-full"
+          >
+            <CarouselContent className="h-full">
+              {heroSlides.map((imagePath, index) => (
+                <CarouselItem key={index} className="h-screen">
+                  <img
+                    src={imagePath}
+                    alt={`Slide ${index + 1}`}
+                    className="w-full h-full object-cover object-top"
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        )}
 
         {/* Dot Indicators */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
@@ -152,24 +167,35 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <Card
-                key={index}
-                className="border-border hover:shadow-lg transition-shadow"
-              >
-                <CardContent className="p-6">
-                  <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+            {isLoading
+              ? Array.from({ length: 4 }).map((_, index) => (
+                  <Card key={index} className="border-border">
+                    <CardContent className="p-6">
+                      <Skeleton className="w-12 h-12 rounded-lg mb-4" />
+                      <Skeleton className="h-6 w-3/4 mb-2" />
+                      <Skeleton className="h-4 w-full mb-1" />
+                      <Skeleton className="h-4 w-5/6" />
+                    </CardContent>
+                  </Card>
+                ))
+              : features.map((feature, index) => (
+                  <Card
+                    key={index}
+                    className="border-border hover:shadow-lg transition-shadow"
+                  >
+                    <CardContent className="p-6">
+                      <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                        <feature.icon className="h-6 w-6 text-primary" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground mb-2">
+                        {feature.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {feature.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
           </div>
         </div>
       </section>
