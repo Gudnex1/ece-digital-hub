@@ -16,7 +16,7 @@ const AIChatbot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hello! I'm here to help answer questions about the Department of Electronic & Computer Engineering. How can I assist you today?",
+      content: "Hi! What would you like to know about the ECE Dept??",
     },
   ]);
   const [input, setInput] = useState("");
