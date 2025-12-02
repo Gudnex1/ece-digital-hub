@@ -18,12 +18,14 @@ export type Database = {
         Row: {
           bio: string | null
           created_at: string
+          designation: string | null
           email: string
           full_name: string
           id: string
           office: string | null
           phone: string | null
           profile_image_url: string | null
+          qualifications: string | null
           specialization: string | null
           title: string | null
           updated_at: string
@@ -32,12 +34,14 @@ export type Database = {
         Insert: {
           bio?: string | null
           created_at?: string
+          designation?: string | null
           email: string
           full_name: string
           id?: string
           office?: string | null
           phone?: string | null
           profile_image_url?: string | null
+          qualifications?: string | null
           specialization?: string | null
           title?: string | null
           updated_at?: string
@@ -46,12 +50,14 @@ export type Database = {
         Update: {
           bio?: string | null
           created_at?: string
+          designation?: string | null
           email?: string
           full_name?: string
           id?: string
           office?: string | null
           phone?: string | null
           profile_image_url?: string | null
+          qualifications?: string | null
           specialization?: string | null
           title?: string | null
           updated_at?: string
@@ -86,6 +92,36 @@ export type Database = {
           matric_number?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
+        }
+        Relationships: []
+      }
+      research_areas: {
+        Row: {
+          created_at: string | null
+          description: string
+          icon: string | null
+          id: string
+          projects: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          icon?: string | null
+          id?: string
+          projects?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          icon?: string | null
+          id?: string
+          projects?: string[] | null
+          title?: string
+          updated_at?: string | null
         }
         Relationships: []
       }

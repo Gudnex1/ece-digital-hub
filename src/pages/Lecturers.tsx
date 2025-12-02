@@ -11,6 +11,8 @@ interface Lecturer {
   full_name: string;
   title: string | null;
   specialization: string | null;
+  designation: string | null;
+  qualifications: string | null;
   email: string;
   phone: string | null;
   office: string | null;
@@ -107,9 +109,19 @@ const Lecturers = () => {
                         <h3 className="text-lg font-semibold text-foreground mb-1">
                           {lecturer.title ? `${lecturer.title} ${lecturer.full_name}` : lecturer.full_name}
                         </h3>
+                        {lecturer.designation && (
+                          <p className="text-sm font-medium text-primary mb-2">
+                            {lecturer.designation}
+                          </p>
+                        )}
                         {lecturer.specialization && (
                           <p className="text-sm text-muted-foreground mb-2">
                             <span className="font-medium">Specialization:</span> {lecturer.specialization}
+                          </p>
+                        )}
+                        {lecturer.qualifications && (
+                          <p className="text-sm text-muted-foreground mb-2">
+                            <span className="font-medium">Qualifications:</span> {lecturer.qualifications}
                           </p>
                         )}
                         {lecturer.office && (
