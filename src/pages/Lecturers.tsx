@@ -5,7 +5,6 @@ import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useState, useEffect } from 'react';
-
 interface Lecturer {
   id: string;
   full_name: string;
@@ -19,24 +18,19 @@ interface Lecturer {
   bio: string | null;
   profile_image_url: string | null;
 }
-
 const Lecturers = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [lecturers, setLecturers] = useState<Lecturer[]>([]);
-
   useEffect(() => {
     loadLecturers();
   }, []);
-
   const loadLecturers = async () => {
     try {
-      const { data, error } = await supabase
-        .from('lecturers')
-        .select('*')
-        .order('full_name');
-
+      const {
+        data,
+        error
+      } = await supabase.from('lecturers').select('*').order('full_name');
       if (error) throw error;
-
       setLecturers(data || []);
     } catch (error) {
       console.error('Error loading lecturers:', error);
@@ -44,9 +38,7 @@ const Lecturers = () => {
       setIsLoading(false);
     }
   };
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Header />
 
       {/* Page Header */}
@@ -68,9 +60,9 @@ const Lecturers = () => {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {isLoading ? (
-              Array.from({ length: 6 }).map((_, index) => (
-                <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            {isLoading ? Array.from({
+            length: 6
+          }).map((_, index) => <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
                       <Skeleton className="h-12 w-12 rounded-full" />
@@ -81,84 +73,51 @@ const Lecturers = () => {
                       </div>
                     </div>
                   </CardContent>
-                </Card>
-              ))
-            ) : lecturers.length === 0 ? (
-              <div className="col-span-full text-center py-12">
+                </Card>) : lecturers.length === 0 ? <div className="col-span-full text-center py-12">
                 <p className="text-muted-foreground">No lecturers found. Lecturers can create their profiles by logging in.</p>
-              </div>
-            ) : (
-              lecturers.map((lecturer) => (
-                <Card key={lecturer.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+              </div> : lecturers.map(lecturer => <Card key={lecturer.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
                       <div className="flex-shrink-0">
-                        {lecturer.profile_image_url ? (
-                          <img
-                            src={lecturer.profile_image_url}
-                            alt={lecturer.full_name}
-                            className="h-12 w-12 rounded-full object-cover"
-                          />
-                        ) : (
-                          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        {lecturer.profile_image_url ? <img src={lecturer.profile_image_url} alt={lecturer.full_name} className="h-12 w-12 rounded-full object-cover" /> : <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
                             <GraduationCap className="h-6 w-6 text-foreground" />
-                          </div>
-                        )}
+                          </div>}
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold text-foreground mb-1">
                           {lecturer.title ? `${lecturer.title} ${lecturer.full_name}` : lecturer.full_name}
                         </h3>
-                        {lecturer.designation && (
-                          <p className="text-sm font-medium text-primary mb-2">
+                        {lecturer.designation && <p className="text-sm font-medium text-primary mb-2">
                             {lecturer.designation}
-                          </p>
-                        )}
-                        {lecturer.specialization && (
-                          <p className="text-sm text-muted-foreground mb-2">
-                            <span className="font-medium">Specialization:</span> {lecturer.specialization}
-                          </p>
-                        )}
-                        {lecturer.qualifications && (
-                          <p className="text-sm text-muted-foreground mb-2">
+                          </p>}
+                        {lecturer.specialization && <p className="text-sm text-muted-foreground mb-2">
+                            <span className="font-medium text-destructive">Specialization:</span> {lecturer.specialization}
+                          </p>}
+                        {lecturer.qualifications && <p className="text-sm text-muted-foreground mb-2">
                             <span className="font-medium">Qualifications:</span> {lecturer.qualifications}
-                          </p>
-                        )}
-                        {lecturer.office && (
-                          <p className="text-sm text-muted-foreground mb-2">
+                          </p>}
+                        {lecturer.office && <p className="text-sm text-muted-foreground mb-2">
                             <span className="font-medium">Office:</span> {lecturer.office}
-                          </p>
-                        )}
-                        {lecturer.bio && (
-                          <p className="text-sm text-muted-foreground mb-3">{lecturer.bio}</p>
-                        )}
+                          </p>}
+                        {lecturer.bio && <p className="text-sm text-muted-foreground mb-3">{lecturer.bio}</p>}
                         <div className="flex flex-wrap gap-3">
-                          <a
-                            href={`mailto:${lecturer.email}`}
-                            className="inline-flex items-center gap-2 text-sm text-primary hover:text-foreground transition-colors"
-                          >
+                          <a href={`mailto:${lecturer.email}`} className="inline-flex items-center gap-2 text-sm text-primary hover:text-foreground transition-colors">
                             <Mail className="h-4 w-4" />
                             {lecturer.email}
                           </a>
-                          {lecturer.phone && (
-                            <span className="text-sm text-muted-foreground">
+                          {lecturer.phone && <span className="text-sm text-muted-foreground">
                               <span className="font-medium">Phone:</span> {lecturer.phone}
-                            </span>
-                          )}
+                            </span>}
                         </div>
                       </div>
                     </div>
                   </CardContent>
-                </Card>
-              ))
-            )}
+                </Card>)}
           </div>
         </div>
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Lecturers;
