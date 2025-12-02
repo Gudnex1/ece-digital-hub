@@ -89,12 +89,14 @@ const Home = () => {
           >
             <CarouselContent className="h-full">
               {heroSlides.map((imagePath, index) => (
-                <CarouselItem key={index} className="h-screen">
+                <CarouselItem key={index} className="h-screen relative">
                   <img
                     src={imagePath}
                     alt={`Slide ${index + 1}`}
-                    className="w-full h-full object-cover object-top"
+                    className="w-full h-full object-cover object-center"
                   />
+                  {/* Dark overlay for better text readability */}
+                  <div className="absolute inset-0 bg-black/40" />
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -118,20 +120,19 @@ const Home = () => {
         </div>
         <div className="container mx-auto px-4 z-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="max-w-3xl">
-            <h1 className="text-3xl md:text-6xl font-bold text-slate-100 animate-fade-in mb-14 md:mb-6 text-center  md:text-left">
+            <h1 className="text-3xl md:text-6xl font-bold text-white animate-fade-in mb-6 md:mb-6 text-center md:text-left [text-shadow:_2px_2px_8px_rgb(0_0_0_/_80%)]">
               Department of Electronic & Computer Engineering
             </h1>
-            <p className="text-lg md:text-xl text-white mb-8 animate-fade-in text-center md:text-left">
+            <p className="text-base md:text-xl text-white mb-8 animate-fade-in text-center md:text-left [text-shadow:_1px_1px_6px_rgb(0_0_0_/_70%)]">
               Pioneering the future of technology through innovative education,
               groundbreaking research, and industry collaboration. Join us in
               shaping tomorrow's engineering solutions.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
+            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in justify-center md:justify-start">
               <Link to="/programs">
                 <Button
                   size="lg"
-                  variant="secondary"
-                  className="w-full sm:w-auto group dark:bg-white/50 dark:text-black/60"
+                  className="w-full sm:w-auto group bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                   Explore Programs
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -141,7 +142,7 @@ const Home = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto bg-background/10 text-primary-foreground border-primary-foreground/30 hover:bg-background/20"
+                  className="w-full sm:w-auto bg-background/20 text-white border-white/40 hover:bg-background/30 hover:text-white"
                 >
                   View Research
                 </Button>
