@@ -1,24 +1,64 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, GraduationCap, Moon, Sun } from "lucide-react";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, GraduationCap, Moon, Sun, LogOut, User } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { useTheme } from "next-themes";
+import { supabase } from '@/integrations/supabase/client';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 const Header = () => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isInHero, setIsInHero] = useState(true);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [isLecturer, setIsLecturer] = useState(false);
   const location = useLocation();
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
-      const heroHeight = window.innerHeight * 0.91; // 91vh hero section
+      const heroHeight = window.innerHeight * 0.91;
       setIsInHero(window.scrollY < heroHeight);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        checkIfLecturer(session.user.id);
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        checkIfLecturer(session.user.id);
+      } else {
+        setIsLecturer(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const checkIfLecturer = async (userId: string) => {
+    const { data } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .single();
+    
+    setIsLecturer(data?.role === 'lecturer');
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -84,6 +124,29 @@ const Header = () => {
                 <Moon className="h-5 w-5" />
               )}
             </Button>
+
+            {user ? (
+              <>
+                {isLecturer && (
+                  <Link to="/lecturer-dashboard">
+                    <Button variant="outline" size="sm">
+                      <User className="h-4 w-4 mr-2" />
+                      Dashboard
+                    </Button>
+                  </Link>
+                )}
+                <Button variant="outline" size="sm" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Link to="/auth">
+                <Button variant="default" size="sm">
+                  Login / Sign Up
+                </Button>
+              </Link>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -126,6 +189,38 @@ const Header = () => {
                 {link.name}
               </Link>
             ))}
+            <div className="pt-2 space-y-2">
+              {user ? (
+                <>
+                  {isLecturer && (
+                    <Link to="/lecturer-dashboard" onClick={() => setIsMenuOpen(false)}>
+                      <Button variant="outline" size="sm" className="w-full justify-start">
+                        <User className="h-4 w-4 mr-2" />
+                        Dashboard
+                      </Button>
+                    </Link>
+                  )}
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full justify-start"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="default" size="sm" className="w-full">
+                    Login / Sign Up
+                  </Button>
+                </Link>
+              )}
+            </div>
           </nav>
         )}
       </div>
