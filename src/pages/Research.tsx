@@ -5,67 +5,20 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { supabase } from '@/integrations/supabase/client';
+
+interface ResearchArea {
+  id: string;
+  title: string;
+  description: string;
+  icon: string | null;
+  projects: string[];
+}
 
 const Research = () => {
   const [expandedArea, setExpandedArea] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  const researchAreas = [
-    {
-      title: 'Artificial Intelligence & Machine Learning',
-      description: 'Developing advanced AI algorithms for computer vision, natural language processing, and predictive analytics.',
-      projects: [
-        'Deep Learning for Medical Image Analysis',
-        'Reinforcement Learning for Autonomous Systems',
-        'Neural Architecture Search Optimization',
-      ],
-    },
-    {
-      title: 'Internet of Things (IoT)',
-      description: 'Creating smart, connected systems for healthcare, agriculture, and smart cities.',
-      projects: [
-        'Smart Home Automation Systems',
-        'Agricultural IoT for Precision Farming',
-        'Industrial IoT for Predictive Maintenance',
-      ],
-    },
-    {
-      title: 'VLSI Design & Nanoelectronics',
-      description: 'Research in low-power circuit design, memory systems, and next-generation computing.',
-      projects: [
-        'Low-Power SRAM Design',
-        'Neuromorphic Computing Chips',
-        'Quantum Dot Cellular Automata',
-      ],
-    },
-    {
-      title: 'Wireless Communications',
-      description: 'Advancing 5G/6G technologies, software-defined radio, and cognitive networks.',
-      projects: [
-        'Millimeter Wave Communication Systems',
-        'Massive MIMO Technology',
-        'Energy-Efficient Wireless Protocols',
-      ],
-    },
-    {
-      title: 'Embedded Systems & Robotics',
-      description: 'Developing intelligent robots, autonomous vehicles, and real-time control systems.',
-      projects: [
-        'Autonomous Navigation for Mobile Robots',
-        'Drone-based Surveillance Systems',
-        'Real-Time Operating Systems for Critical Applications',
-      ],
-    },
-    {
-      title: 'Cybersecurity',
-      description: 'Research in cryptography, network security, and secure hardware design.',
-      projects: [
-        'Hardware Security Modules',
-        'Blockchain for Secure Transactions',
-        'AI-based Intrusion Detection Systems',
-      ],
-    },
-  ];
+  const [researchAreas, setResearchAreas] = useState<ResearchArea[]>([]);
 
   const achievements = [
     {
@@ -90,12 +43,25 @@ const Research = () => {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 650);
-
-    return () => clearTimeout(timer);
+    loadResearchAreas();
   }, []);
+
+  const loadResearchAreas = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('research_areas')
+        .select('*')
+        .order('title');
+
+      if (error) throw error;
+
+      setResearchAreas(data || []);
+    } catch (error) {
+      console.error('Error loading research areas:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -163,67 +129,73 @@ const Research = () => {
           </div>
 
           <div className="max-w-4xl mx-auto space-y-4">
-            {isLoading
-              ? Array.from({ length: 6 }).map((_, index) => (
-                  <Card key={index} className="border-border">
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <div className="flex-1">
-                          <Skeleton className="h-6 w-3/4 mb-2" />
-                          <Skeleton className="h-4 w-full mb-1" />
-                          <Skeleton className="h-4 w-5/6" />
-                        </div>
-                        <Skeleton className="w-5 h-5" />
+            {isLoading ? (
+              Array.from({ length: 6 }).map((_, index) => (
+                <Card key={index} className="border-border">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="flex-1">
+                        <Skeleton className="h-6 w-3/4 mb-2" />
+                        <Skeleton className="h-4 w-full mb-1" />
+                        <Skeleton className="h-4 w-5/6" />
                       </div>
-                    </CardContent>
-                  </Card>
-                ))
-              : researchAreas.map((area, index) => (
-                  <Card key={index} className="border-border overflow-hidden">
-                    <CardContent className="p-0">
-                      <Button
-                        variant="ghost"
-                        className="w-full p-6 h-auto justify-between hover:bg-muted/50"
-                        onClick={() => toggleArea(index)}
-                      >
-                        <div className="text-left">
-                          <h3 className="text-lg font-semibold text-foreground mb-1">
-                            {area.title}
-                          </h3>
-                          <p className="text-sm text-muted-foreground">
-                            {area.description}
-                          </p>
-                        </div>
-                        {expandedArea === index ? (
-                          <ChevronUp className="h-5 w-5 text-primary ml-4" />
-                        ) : (
-                          <ChevronDown className="h-5 w-5 text-primary ml-4" />
-                        )}
-                      </Button>
-
-                      {expandedArea === index && (
-                        <div className="px-6 pb-6 animate-fade-in">
-                          <div className="bg-muted/50 rounded-lg p-4 mt-2">
-                            <p className="text-sm font-medium text-foreground mb-3">
-                              Current Projects:
-                            </p>
-                            <ul className="space-y-2">
-                              {area.projects.map((project, idx) => (
-                                <li
-                                  key={idx}
-                                  className="text-sm text-muted-foreground flex items-start gap-2"
-                                >
-                                  <span className="text-primary mt-1">•</span>
-                                  <span>{project}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
+                      <Skeleton className="w-5 h-5" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : researchAreas.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">No research areas available yet.</p>
+              </div>
+            ) : (
+              researchAreas.map((area, index) => (
+                <Card key={area.id} className="border-border overflow-hidden">
+                  <CardContent className="p-0">
+                    <Button
+                      variant="ghost"
+                      className="w-full p-6 h-auto justify-between hover:bg-muted/50"
+                      onClick={() => toggleArea(index)}
+                    >
+                      <div className="text-left">
+                        <h3 className="text-lg font-semibold text-foreground mb-1">
+                          {area.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {area.description}
+                        </p>
+                      </div>
+                      {expandedArea === index ? (
+                        <ChevronUp className="h-5 w-5 text-primary ml-4" />
+                      ) : (
+                        <ChevronDown className="h-5 w-5 text-primary ml-4" />
                       )}
-                    </CardContent>
-                  </Card>
-                ))}
+                    </Button>
+
+                    {expandedArea === index && area.projects.length > 0 && (
+                      <div className="px-6 pb-6 animate-fade-in">
+                        <div className="bg-muted/50 rounded-lg p-4 mt-2">
+                          <p className="text-sm font-medium text-foreground mb-3">
+                            Current Projects:
+                          </p>
+                          <ul className="space-y-2">
+                            {area.projects.map((project, idx) => (
+                              <li
+                                key={idx}
+                                className="text-sm text-muted-foreground flex items-start gap-2"
+                              >
+                                <span className="text-primary mt-1">•</span>
+                                <span>{project}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </section>

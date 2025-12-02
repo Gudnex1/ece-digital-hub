@@ -11,7 +11,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isInHero, setIsInHero] = useState(true);
   const [user, setUser] = useState<SupabaseUser | null>(null);
-  const [isLecturer, setIsLecturer] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   const { theme, setTheme } = useTheme();
 
@@ -29,30 +29,30 @@ const Header = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        checkIfLecturer(session.user.id);
+        checkIfAdmin(session.user.id);
       }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        checkIfLecturer(session.user.id);
+        checkIfAdmin(session.user.id);
       } else {
-        setIsLecturer(false);
+        setIsAdmin(false);
       }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  const checkIfLecturer = async (userId: string) => {
+  const checkIfAdmin = async (userId: string) => {
     const { data } = await supabase
       .from('user_roles')
       .select('role')
       .eq('user_id', userId)
       .single();
     
-    setIsLecturer(data?.role === 'lecturer');
+    setIsAdmin(data?.role === 'admin');
   };
 
   const handleLogout = async () => {
@@ -96,7 +96,7 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center justify-center flex-1 gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -111,12 +111,14 @@ const Header = () => {
                 )}
               </Link>
             ))}
+          </nav>
 
+          {/* Right Side Actions */}
+          <div className="hidden md:flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="ml-2"
             >
               {theme === 'dark' ? (
                 <Sun className="h-5 w-5" />
@@ -127,11 +129,11 @@ const Header = () => {
 
             {user ? (
               <>
-                {isLecturer && (
-                  <Link to="/lecturer-dashboard">
+                {isAdmin && (
+                  <Link to="/admin">
                     <Button variant="outline" size="sm">
                       <User className="h-4 w-4 mr-2" />
-                      Dashboard
+                      Admin
                     </Button>
                   </Link>
                 )}
@@ -143,11 +145,11 @@ const Header = () => {
             ) : (
               <Link to="/auth">
                 <Button variant="default" size="sm">
-                  Login / Sign Up
+                  Admin Login
                 </Button>
               </Link>
             )}
-          </nav>
+          </div>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 md:hidden">
@@ -192,11 +194,11 @@ const Header = () => {
             <div className="pt-2 space-y-2">
               {user ? (
                 <>
-                  {isLecturer && (
-                    <Link to="/lecturer-dashboard" onClick={() => setIsMenuOpen(false)}>
+                  {isAdmin && (
+                    <Link to="/admin" onClick={() => setIsMenuOpen(false)}>
                       <Button variant="outline" size="sm" className="w-full justify-start">
                         <User className="h-4 w-4 mr-2" />
-                        Dashboard
+                        Admin
                       </Button>
                     </Link>
                   )}
@@ -216,7 +218,7 @@ const Header = () => {
               ) : (
                 <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
                   <Button variant="default" size="sm" className="w-full">
-                    Login / Sign Up
+                    Admin Login
                   </Button>
                 </Link>
               )}
