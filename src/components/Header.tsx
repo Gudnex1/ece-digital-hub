@@ -142,7 +142,7 @@ const Header = () => {
                   Logout
                 </Button>
               </>
-            ) : (
+            ) : location.pathname === '/admin' && (
               <Link to="/auth">
                 <Button variant="default" size="sm">
                   Admin Login
@@ -215,7 +215,7 @@ const Header = () => {
                     Logout
                   </Button>
                 </>
-              ) : (
+              ) : location.pathname === '/admin' && (
                 <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
                   <Button variant="default" size="sm" className="w-full">
                     Admin Login
