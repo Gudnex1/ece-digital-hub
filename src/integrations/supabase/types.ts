@@ -45,7 +45,7 @@ export type Database = {
           specialization?: string | null
           title?: string | null
           updated_at?: string
-          user_id: string
+          user_id?: string
         }
         Update: {
           bio?: string | null

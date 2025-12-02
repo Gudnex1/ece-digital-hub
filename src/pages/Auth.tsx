@@ -12,7 +12,8 @@ import Footer from "@/components/Footer";
 const Auth = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [loginData, setLoginData] = useState({
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [authData, setAuthData] = useState({
     email: "",
     password: "",
   });
@@ -57,8 +58,8 @@ const Auth = () => {
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email: loginData.email,
-        password: loginData.password,
+        email: authData.email,
+        password: authData.password,
       });
 
       if (error) throw error;
@@ -72,42 +73,92 @@ const Auth = () => {
     }
   };
 
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+
+      const { error } = await supabase.auth.signUp({
+        email: authData.email,
+        password: authData.password,
+        options: {
+          emailRedirectTo: redirectUrl,
+        },
+      });
+
+      if (error) throw error;
+
+      toast.success("Sign up successful! You can now log in.");
+      setIsSignUp(false);
+    } catch (error: any) {
+      console.error("Sign up error:", error);
+      toast.error(error.message || "Failed to sign up");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1 flex items-center justify-center py-12 px-4">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Admin Login</CardTitle>
-            <CardDescription>Sign in to access the admin dashboard</CardDescription>
+            <CardTitle>{isSignUp ? 'Create Account' : 'Admin Login'}</CardTitle>
+            <CardDescription>
+              {isSignUp
+                ? 'Sign up with an email and password to request admin access.'
+                : 'Sign in to access the admin dashboard'}
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={isSignUp ? handleSignUp : handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="login-email">Email</Label>
+                <Label htmlFor="auth-email">Email</Label>
                 <Input
-                  id="login-email"
+                  id="auth-email"
                   type="email"
-                  placeholder="admin@university.edu"
-                  value={loginData.email}
-                  onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                  placeholder="user@university.edu"
+                  value={authData.email}
+                  onChange={(e) => setAuthData({ ...authData, email: e.target.value })}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="login-password">Password</Label>
+                <Label htmlFor="auth-password">Password</Label>
                 <Input
-                  id="login-password"
+                  id="auth-password"
                   type="password"
-                  value={loginData.password}
-                  onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                  value={authData.password}
+                  onChange={(e) => setAuthData({ ...authData, password: e.target.value })}
                   required
                 />
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Logging in..." : "Log In"}
+                {isLoading ? (isSignUp ? "Signing up..." : "Logging in...") : isSignUp ? "Sign Up" : "Log In"}
               </Button>
             </form>
+            <div className="mt-4 text-center text-sm text-muted-foreground">
+              {isSignUp ? (
+                <button
+                  type="button"
+                  className="underline underline-offset-4"
+                  onClick={() => setIsSignUp(false)}
+                >
+                  Already have an account? Log in
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="underline underline-offset-4"
+                  onClick={() => setIsSignUp(true)}
+                >
+                  Need an account? Sign up
+                </button>
+              )}
+            </div>
           </CardContent>
         </Card>
       </main>
