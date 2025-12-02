@@ -72,6 +72,7 @@ const Home = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+
       {/* Hero Section */}
       <section className="z-10 relative w-full h-[65vh] md:h-[91vh] overflow-hidden">
         {isLoading ? (
@@ -120,7 +121,7 @@ const Home = () => {
         </div>
         <div className="container mx-auto px-4 z-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="max-w-3xl">
-            <h1 className="text-3xl md:text-6xl font-bold text-white animate-fade-in mb-6 md:mb-6 text-center md:text-left [text-shadow:_2px_2px_8px_rgb(0_0_0_/_80%)]">
+            <h1 className="text-3xl md:text-6xl font-bold text-white animate-fade-in mb-6 md:mb-6 tracking-normal  md:leading-tight  text-center md:text-left [text-shadow:_2px_2px_8px_rgb(0_0_0_/_80%)]">
               Department of Electronic & Computer Engineering
             </h1>
             <p className="text-base md:text-xl text-white mb-8 animate-fade-in text-center md:text-left [text-shadow:_1px_1px_6px_rgb(0_0_0_/_70%)]">

@@ -1,8 +1,8 @@
 import { Mail, Phone, MapPin, GraduationCap } from 'lucide-react';
 const Footer = () => {
   return (
-    <footer className="bg-card border-t border-border mt-auto">
-      <div className="container mx-auto px-4 py-12 bg-[#3f3e3e] text-white">
+    <footer className="bg-[#1d283a] dark:bg-gray-800 border-t border-border mt-auto">
+      <div className="container mx-auto px-4 py-12 text-white">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About Section */}
           <div>
@@ -13,7 +13,8 @@ const Footer = () => {
               <h3 className="text-lg font-bold text-white">ECE Department</h3>
             </div>
             <p className="text-sm text-gray-300">
-              Shaping the future of electronics and computer engineering through excellence in education, research, and innovation.
+              Shaping the future of electronics and computer engineering through
+              excellence in education, research, and innovation.
             </p>
           </div>
 
@@ -42,16 +43,28 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-bold text-white mb-4">Quick Links</h3>
             <div className="space-y-2">
-              <a href="/" className="block text-sm text-gray-300 hover:text-white transition-colors">
+              <a
+                href="/"
+                className="block text-sm text-gray-300 hover:text-white transition-colors"
+              >
                 Home
               </a>
-              <a href="/lecturers" className="block text-sm text-gray-300 hover:text-white transition-colors">
+              <a
+                href="/lecturers"
+                className="block text-sm text-gray-300 hover:text-white transition-colors"
+              >
                 Faculty
               </a>
-              <a href="/programs" className="block text-sm text-gray-300 hover:text-white transition-colors">
+              <a
+                href="/programs"
+                className="block text-sm text-gray-300 hover:text-white transition-colors"
+              >
                 Academic Programs
               </a>
-              <a href="/research" className="block text-sm text-gray-300 hover:text-white transition-colors">
+              <a
+                href="/research"
+                className="block text-sm text-gray-300 hover:text-white transition-colors"
+              >
                 Research & Publications
               </a>
             </div>
@@ -60,11 +73,12 @@ const Footer = () => {
 
         <div className="mt-8 pt-8 border-t border-border text-center">
           <p className="text-sm text-gray-300">
-            © {new Date().getFullYear()} Department of Electronics & Computer Engineering. All rights reserved.
+            © {new Date().getFullYear()} Department of Electronics & Computer
+            Engineering. All rights reserved.
           </p>
         </div>
       </div>
     </footer>
-  )
+  );
 };
 export default Footer;
