@@ -91,7 +91,7 @@ const Lecturers = () => {
                             {lecturer.designation}
                           </p>}
                         {lecturer.specialization && <p className="text-sm text-muted-foreground mb-2">
-                            <span className="font-medium text-secondary-foreground">Specialization:</span> {lecturer.specialization}
+                            <span className="text-secondary-foreground font-mono font-semibold">Specialization:</span> {lecturer.specialization}
                           </p>}
                         {lecturer.qualifications && <p className="text-sm text-muted-foreground mb-2">
                             <span className="text-secondary-foreground font-mono font-semibold">Qualifications:</span> {lecturer.qualifications}
