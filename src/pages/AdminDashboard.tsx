@@ -235,24 +235,36 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-muted/20">
       <Header />
       
       <main className="flex-1 py-12 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+        <div className="container mx-auto max-w-7xl">
+          <div className="mb-10 text-center">
+            <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+              Admin Dashboard
+            </h1>
+            <p className="text-muted-foreground text-lg">Manage lecturers, research areas, and content</p>
+          </div>
 
-          <Tabs defaultValue="lecturers" className="space-y-6">
-            <TabsList>
-              <TabsTrigger value="lecturers">Lecturers</TabsTrigger>
-              <TabsTrigger value="research">Research Areas</TabsTrigger>
+          <Tabs defaultValue="lecturers" className="space-y-8">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 h-12">
+              <TabsTrigger value="lecturers" className="text-base">Lecturers</TabsTrigger>
+              <TabsTrigger value="research" className="text-base">Research Areas</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="lecturers" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Add New Lecturer</CardTitle>
-                  <CardDescription>Fill in the details to add a new lecturer profile</CardDescription>
+            <TabsContent value="lecturers" className="space-y-8">
+              <Card className="border-primary/20 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Plus className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-2xl">Add New Lecturer</CardTitle>
+                      <CardDescription className="text-base">Fill in the details to add a new lecturer profile</CardDescription>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleAddLecturer} className="space-y-4">
@@ -359,42 +371,75 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Existing Lecturers</CardTitle>
+              <Card className="border-primary/20 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-muted/50 via-muted/30 to-muted/50">
+                  <CardTitle className="text-2xl">Existing Lecturers ({lecturers.length})</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {lecturers.map((lecturer) => (
-                      <div key={lecturer.id} className="flex items-start justify-between p-4 border rounded-lg">
-                        <div className="flex-1">
-                          <h3 className="font-semibold">
-                            {lecturer.title ? `${lecturer.title} ${lecturer.full_name}` : lecturer.full_name}
-                          </h3>
-                          <p className="text-sm text-muted-foreground">{lecturer.email}</p>
-                          {lecturer.designation && (
-                            <p className="text-sm text-muted-foreground">{lecturer.designation}</p>
-                          )}
+                <CardContent className="pt-6">
+                  {lecturers.length === 0 ? (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <p className="text-lg">No lecturers added yet</p>
+                      <p className="text-sm">Add your first lecturer using the form above</p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-4 md:grid-cols-2">
+                      {lecturers.map((lecturer) => (
+                        <div key={lecturer.id} className="group relative p-5 border-2 border-border hover:border-primary/50 rounded-xl transition-all duration-300 hover:shadow-md bg-card">
+                          <div className="flex items-start gap-4">
+                            {lecturer.profile_image_url ? (
+                              <img 
+                                src={lecturer.profile_image_url} 
+                                alt={lecturer.full_name}
+                                className="w-16 h-16 rounded-full object-cover border-2 border-primary/20"
+                              />
+                            ) : (
+                              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20">
+                                <span className="text-2xl font-bold text-primary">
+                                  {lecturer.full_name.charAt(0)}
+                                </span>
+                              </div>
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-semibold text-lg truncate">
+                                {lecturer.title ? `${lecturer.title} ${lecturer.full_name}` : lecturer.full_name}
+                              </h3>
+                              <p className="text-sm text-muted-foreground truncate">{lecturer.email}</p>
+                              {lecturer.designation && (
+                                <p className="text-sm text-primary font-medium mt-1">{lecturer.designation}</p>
+                              )}
+                              {lecturer.specialization && (
+                                <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{lecturer.specialization}</p>
+                              )}
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive hover:text-destructive-foreground"
+                            onClick={() => handleDeleteLecturer(lecturer.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleDeleteLecturer(lecturer.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="research" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Add Research Area</CardTitle>
-                  <CardDescription>Add a new research area with projects</CardDescription>
+            <TabsContent value="research" className="space-y-8">
+              <Card className="border-primary/20 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Plus className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-2xl">Add Research Area</CardTitle>
+                      <CardDescription className="text-base">Add a new research area with projects</CardDescription>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleAddResearchArea} className="space-y-4">
@@ -435,33 +480,50 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Existing Research Areas</CardTitle>
+              <Card className="border-primary/20 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-muted/50 via-muted/30 to-muted/50">
+                  <CardTitle className="text-2xl">Existing Research Areas ({researchAreas.length})</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {researchAreas.map((area) => (
-                      <div key={area.id} className="flex items-start justify-between p-4 border rounded-lg">
-                        <div className="flex-1">
-                          <h3 className="font-semibold">{area.title}</h3>
-                          <p className="text-sm text-muted-foreground">{area.description}</p>
-                          {area.projects.length > 0 && (
-                            <p className="text-xs text-muted-foreground mt-2">
-                              {area.projects.length} projects
+                <CardContent className="pt-6">
+                  {researchAreas.length === 0 ? (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <p className="text-lg">No research areas added yet</p>
+                      <p className="text-sm">Add your first research area using the form above</p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                      {researchAreas.map((area) => (
+                        <div key={area.id} className="group relative p-6 border-2 border-border hover:border-primary/50 rounded-xl transition-all duration-300 hover:shadow-md bg-card">
+                          <div className="mb-3">
+                            <h3 className="font-bold text-lg mb-2 text-foreground">{area.title}</h3>
+                            <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+                              {area.description}
                             </p>
+                          </div>
+                          {area.projects && area.projects.length > 0 && (
+                            <div className="mt-4 pt-4 border-t border-border/50">
+                              <div className="flex items-center gap-2 text-xs font-medium text-primary">
+                                <div className="p-1 bg-primary/10 rounded">
+                                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                  </svg>
+                                </div>
+                                {area.projects.length} {area.projects.length === 1 ? 'project' : 'projects'}
+                              </div>
+                            </div>
                           )}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive hover:text-destructive-foreground"
+                            onClick={() => handleDeleteResearchArea(area.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleDeleteResearchArea(area.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
