@@ -34,13 +34,25 @@ interface ResearchArea {
   projects: string[];
 }
 
+interface AdminUser {
+  id: string;
+  user_id: string;
+  role: string;
+  profiles?: {
+    email: string;
+    full_name: string | null;
+  };
+}
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [lecturers, setLecturers] = useState<Lecturer[]>([]);
   const [researchAreas, setResearchAreas] = useState<ResearchArea[]>([]);
+  const [admins, setAdmins] = useState<AdminUser[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [newAdminEmail, setNewAdminEmail] = useState('');
 
   const [newLecturer, setNewLecturer] = useState({
     full_name: '',
@@ -99,13 +111,31 @@ const AdminDashboard = () => {
   };
 
   const loadData = async () => {
-    const [lecturersRes, researchRes] = await Promise.all([
+    const [lecturersRes, researchRes, rolesRes] = await Promise.all([
       supabase.from('lecturers').select('*').order('full_name'),
       supabase.from('research_areas').select('*').order('title'),
+      supabase.from('user_roles').select('*').eq('role', 'admin'),
     ]);
 
     if (lecturersRes.data) setLecturers(lecturersRes.data);
     if (researchRes.data) setResearchAreas(researchRes.data);
+    
+    // Fetch profiles for admin users
+    if (rolesRes.data && rolesRes.data.length > 0) {
+      const userIds = rolesRes.data.map(role => role.user_id);
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('id, email, full_name')
+        .in('id', userIds);
+
+      const adminsWithProfiles = rolesRes.data.map(role => ({
+        ...role,
+        profiles: profilesData?.find(p => p.id === role.user_id) || undefined
+      }));
+      setAdmins(adminsWithProfiles);
+    } else {
+      setAdmins([]);
+    }
   };
 
   const handleImageUpload = async (file: File, lecturerId?: string) => {
@@ -226,6 +256,73 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleAddAdmin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      // First check if user exists in profiles
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', newAdminEmail)
+        .single();
+
+      if (!profile) {
+        toast.error('User not found. They must sign up first.');
+        return;
+      }
+
+      // Check if already admin
+      const { data: existing } = await supabase
+        .from('user_roles')
+        .select('id')
+        .eq('user_id', profile.id)
+        .eq('role', 'admin');
+
+      if (existing && existing.length > 0) {
+        toast.error('User is already an admin');
+        return;
+      }
+
+      // Add admin role
+      const { error } = await supabase
+        .from('user_roles')
+        .insert([{ user_id: profile.id, role: 'admin' }]);
+
+      if (error) throw error;
+
+      toast.success('Admin added successfully');
+      setNewAdminEmail('');
+      loadData();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to add admin');
+    }
+  };
+
+  const handleRemoveAdmin = async (userId: string) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (session?.user.id === userId) {
+      toast.error("You cannot remove yourself as admin");
+      return;
+    }
+
+    if (!confirm('Are you sure you want to remove this admin?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('user_roles')
+        .delete()
+        .eq('user_id', userId)
+        .eq('role', 'admin');
+
+      if (error) throw error;
+      toast.success('Admin removed successfully');
+      loadData();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to remove admin');
+    }
+  };
+
   if (isLoading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
@@ -248,9 +345,10 @@ const AdminDashboard = () => {
           </div>
 
           <Tabs defaultValue="lecturers" className="space-y-8">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 h-12">
+            <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 h-12">
               <TabsTrigger value="lecturers" className="text-base">Lecturers</TabsTrigger>
               <TabsTrigger value="research" className="text-base">Research Areas</TabsTrigger>
+              <TabsTrigger value="admins" className="text-base">Admins</TabsTrigger>
             </TabsList>
 
             <TabsContent value="lecturers" className="space-y-8">
@@ -517,6 +615,86 @@ const AdminDashboard = () => {
                             size="icon"
                             className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive hover:text-destructive-foreground"
                             onClick={() => handleDeleteResearchArea(area.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="admins" className="space-y-8">
+              <Card className="border-primary/20 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Plus className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-2xl">Add New Admin</CardTitle>
+                      <CardDescription className="text-base">Grant admin access to existing users</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleAddAdmin} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="admin_email">User Email *</Label>
+                      <Input
+                        id="admin_email"
+                        type="email"
+                        placeholder="user@example.com"
+                        value={newAdminEmail}
+                        onChange={(e) => setNewAdminEmail(e.target.value)}
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Note: The user must already have an account (signed up) before you can make them an admin.
+                      </p>
+                    </div>
+                    <Button type="submit" className="w-full">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Admin
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+
+              <Card className="border-primary/20 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-muted/50 via-muted/30 to-muted/50">
+                  <CardTitle className="text-2xl">Current Admins ({admins.length})</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  {admins.length === 0 ? (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <p className="text-lg">No admins found</p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-4 md:grid-cols-2">
+                      {admins.map((admin) => (
+                        <div key={admin.id} className="group relative p-5 border-2 border-border hover:border-primary/50 rounded-xl transition-all duration-300 hover:shadow-md bg-card">
+                          <div className="flex items-start gap-4">
+                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20">
+                              <span className="text-xl font-bold text-primary">
+                                {admin.profiles?.email?.charAt(0).toUpperCase() || 'A'}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-semibold text-lg truncate">
+                                {admin.profiles?.full_name || 'Admin User'}
+                              </h3>
+                              <p className="text-sm text-muted-foreground truncate">{admin.profiles?.email}</p>
+                              <p className="text-xs text-primary font-medium mt-1">Administrator</p>
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive hover:text-destructive-foreground"
+                            onClick={() => handleRemoveAdmin(admin.user_id)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
