@@ -74,6 +74,8 @@ const AdminDashboard = () => {
     projects: '',
   });
 
+  const [editingLecturerId, setEditingLecturerId] = useState<string | null>(null);
+
   useEffect(() => {
     checkAdmin();
   }, []);
@@ -173,20 +175,28 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleAddLecturer = async (e: React.FormEvent) => {
+  const handleSaveLecturer = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (editingLecturerId) {
+        const { error } = await supabase
+          .from('lecturers')
+          .update({ ...newLecturer })
+          .eq('id', editingLecturerId);
 
-      const { error } = await supabase.from('lecturers').insert([{
-        ...newLecturer,
-        user_id: session.user.id,
-      }]);
+        if (error) throw error;
 
-      if (error) throw error;
+        toast.success('Lecturer updated successfully');
+      } else {
+        const { error } = await supabase.from('lecturers').insert([
+          { ...newLecturer },
+        ]);
 
-      toast.success('Lecturer added successfully');
+        if (error) throw error;
+
+        toast.success('Lecturer added successfully');
+      }
+
       setNewLecturer({
         full_name: '',
         title: '',
@@ -199,9 +209,10 @@ const AdminDashboard = () => {
         phone: '',
         profile_image_url: '',
       });
+      setEditingLecturerId(null);
       loadData();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to add lecturer');
+      toast.error(error.message || 'Failed to save lecturer');
     }
   };
 
