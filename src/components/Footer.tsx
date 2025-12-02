@@ -1,7 +1,7 @@
 import { Mail, Phone, MapPin, GraduationCap } from 'lucide-react';
 const Footer = () => {
   return (
-    <footer className="bg-card border-t border-border mt-auto">
+    <footer className="bg-slate-600 border-t border-border mt-auto">
       <div className="container mx-auto px-4 py-12 bg-secondary text-secondary-foreground">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About Section */}
@@ -64,6 +64,7 @@ const Footer = () => {
           </p>
         </div>
       </div>
-    </footer>); 
+    </footer>
+  )
 };
 export default Footer;

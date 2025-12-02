@@ -56,28 +56,29 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-5">
+          <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 className={`text-sm font-medium transition-colors hover:text-primary relative ${
-                  isActive(link.path) ? "text-primary" : "text-foreground"
+                  isActive(link.path) ? 'text-primary' : 'text-foreground'
                 }`}
               >
                 {link.name}
                 {isActive(link.path) && (
-                  <span className="absolute -bottom-[10px] left-0 right-0 h-0.5 bg-primary" />
+                  <span className="absolute -bottom-[21px] left-0 right-0 h-0.5 bg-primary" />
                 )}
               </Link>
             ))}
+
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className="ml-2"
             >
-              {theme === "dark" ? (
+              {theme === 'dark' ? (
                 <Sun className="h-5 w-5" />
               ) : (
                 <Moon className="h-5 w-5" />
@@ -90,9 +91,9 @@ const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             >
-              {theme === "dark" ? (
+              {theme === 'dark' ? (
                 <Sun className="h-5 w-5" />
               ) : (
                 <Moon className="h-5 w-5" />
@@ -103,11 +104,7 @@ const Header = () => {
               size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
         </div>
@@ -122,8 +119,8 @@ const Header = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className={`block px-4 py-2 rounded-lg transition-colors ${
                   isActive(link.path)
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-muted"
+                    ? 'bg-primary text-primary-foreground'
+                    : 'hover:bg-muted'
                 }`}
               >
                 {link.name}
