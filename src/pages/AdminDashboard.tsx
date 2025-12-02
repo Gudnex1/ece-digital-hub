@@ -68,19 +68,26 @@ const AdminDashboard = () => {
 
   const checkAdmin = async () => {
     const { data: { session } } = await supabase.auth.getSession();
-    
+
     if (!session) {
       navigate('/auth');
       return;
     }
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('user_roles')
       .select('role')
       .eq('user_id', session.user.id)
-      .single();
+      .eq('role', 'admin');
 
-    if (data?.role !== 'admin') {
+    if (error) {
+      console.error('Error checking admin role:', error);
+      toast.error('Could not verify access. Please try again.');
+      navigate('/');
+      return;
+    }
+
+    if (!data || data.length === 0) {
       toast.error('Access denied');
       navigate('/');
       return;
