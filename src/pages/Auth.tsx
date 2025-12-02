@@ -41,9 +41,9 @@ const Auth = () => {
       .from('user_roles')
       .select('role')
       .eq('user_id', userId)
-      .single();
+      .eq('role', 'admin');
     
-    if (data?.role === 'admin') {
+    if (data && data.length > 0) {
       navigate("/admin");
     } else {
       toast.error("You do not have admin access");
