@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AIChatbot from "@/components/AIChatbot";
 import {
   Carousel,
   CarouselContent,
@@ -297,6 +298,7 @@ const Home = () => {
       </section>
 
       <Footer />
+      <AIChatbot />
     </div>
   );
 };
