@@ -1,0 +1,1 @@
+ALTER TABLE public.lecturers DROP CONSTRAINT IF EXISTS lecturers_user_id_fkey;
