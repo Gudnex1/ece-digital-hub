@@ -14,6 +14,19 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
 
   useEffect(() => {
     checkAuth();
+
+    // Keep guard in sync with login/logout/token refresh across tabs
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        setIsAuthenticated(false);
+        setIsAdmin(false);
+        setLoading(false);
+      } else {
+        checkAuth();
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const checkAuth = async () => {

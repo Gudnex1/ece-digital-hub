@@ -376,7 +376,7 @@ const AdminDashboard = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleAddLecturer} className="space-y-4">
+                  <form onSubmit={handleSaveLecturer} className="space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="full_name">Full Name *</Label>
