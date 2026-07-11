@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, GraduationCap, Moon, Sun, LogOut, User } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, User } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { useTheme } from "next-themes";
 import { supabase } from '@/integrations/supabase/client';
