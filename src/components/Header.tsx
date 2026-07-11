@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, GraduationCap, Moon, Sun, LogOut, User } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, User } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { useTheme } from "next-themes";
 import { supabase } from '@/integrations/supabase/client';
@@ -82,9 +82,11 @@ const Header = () => {
       <div className="container mx-auto px-4 py-5">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="bg-hero-gradient p-2 rounded-lg transition-transform group-hover:scale-105">
-              <GraduationCap className="h-6 w-6 text-primary-foreground" />
-            </div>
+            <img
+              src="/logo.png"
+              alt="Lagos State University logo"
+              className="h-10 w-auto object-contain transition-transform group-hover:scale-105"
+            />
             <div>
               <h1 className="text-xl font-bold text-foreground">
                 ECE Department
