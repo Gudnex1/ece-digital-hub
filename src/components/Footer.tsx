@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, GraduationCap } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 const Footer = () => {
   return (
     <footer className="bg-[#1d283a] dark:bg-gray-800 border-t border-border mt-auto">
@@ -7,9 +7,11 @@ const Footer = () => {
           {/* About Section */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="bg-hero-gradient p-2 rounded-lg">
-                <GraduationCap className="h-5 w-5 text-white" />
-              </div>
+              <img
+                src="/logo.png"
+                alt="Lagos State University logo"
+                className="h-8 w-auto object-contain"
+              />
               <h3 className="text-lg font-bold text-white">ECE Department</h3>
             </div>
             <p className="text-sm text-gray-300">
