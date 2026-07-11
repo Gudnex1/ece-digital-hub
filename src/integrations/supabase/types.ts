@@ -145,16 +145,51 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_lecturers: {
+        Row: {
+          bio: string | null
+          created_at: string | null
+          designation: string | null
+          full_name: string | null
+          id: string | null
+          office: string | null
+          profile_image_url: string | null
+          qualifications: string | null
+          specialization: string | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string | null
+          designation?: string | null
+          full_name?: string | null
+          id?: string | null
+          office?: string | null
+          profile_image_url?: string | null
+          qualifications?: string | null
+          specialization?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string | null
+          designation?: string | null
+          full_name?: string | null
+          id?: string | null
+          office?: string | null
+          profile_image_url?: string | null
+          qualifications?: string | null
+          specialization?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
       app_role: "student" | "lecturer" | "admin"

@@ -1,4 +1,4 @@
-import { Mail, GraduationCap } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,8 +12,6 @@ interface Lecturer {
   specialization: string | null;
   designation: string | null;
   qualifications: string | null;
-  email: string;
-  phone: string | null;
   office: string | null;
   bio: string | null;
   profile_image_url: string | null;
@@ -29,7 +27,10 @@ const Lecturers = () => {
       const {
         data,
         error
-      } = await supabase.from('lecturers').select('*').order('full_name');
+      } = await supabase
+        .from('lecturers')
+        .select('id, full_name, title, specialization, designation, qualifications, office, bio, profile_image_url')
+        .order('full_name');
       if (error) throw error;
       setLecturers(data || []);
     } catch (error) {
@@ -100,15 +101,6 @@ const Lecturers = () => {
                             <span className="font-medium">Office:</span> {lecturer.office}
                           </p>}
                         {lecturer.bio && <p className="text-sm text-muted-foreground mb-3">{lecturer.bio}</p>}
-                        <div className="flex flex-wrap gap-3">
-                          <a href={`mailto:${lecturer.email}`} className="inline-flex items-center gap-2 text-sm text-primary hover:text-foreground transition-colors">
-                            <Mail className="h-4 w-4" />
-                            {lecturer.email}
-                          </a>
-                          {lecturer.phone && <span className="text-sm text-muted-foreground">
-                              <span className="font-medium">Phone:</span> {lecturer.phone}
-                            </span>}
-                        </div>
                       </div>
                     </div>
                   </CardContent>
