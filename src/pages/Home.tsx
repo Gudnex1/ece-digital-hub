@@ -17,6 +17,7 @@ import { useState, useEffect } from "react";
 import slide1 from "/public/carousel/slide1.jpg";
 import slide2 from "/public/carousel/slide2.jpg";
 import slide3 from "/public/carousel/slide3.jpg";
+import slide4 from "/public/carousel/slide4.jpg";
 
 const Home = () => {
   const [api, setApi] = useState<CarouselApi>();
