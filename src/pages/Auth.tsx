@@ -18,11 +18,14 @@ const Auth = () => {
     password: "",
   });
 
+  const nextParam = new URLSearchParams(window.location.search).get("next");
+  const safeNext = nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//") ? nextParam : null;
+
   useEffect(() => {
     // Check if user is already logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        // Check if user is admin
+        if (safeNext) { window.location.href = safeNext; return; }
         checkIfAdmin(session.user.id);
       }
     });
@@ -30,12 +33,13 @@ const Auth = () => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session) {
+        if (safeNext) { window.location.href = safeNext; return; }
         checkIfAdmin(session.user.id);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, safeNext]);
 
   const checkIfAdmin = async (userId: string) => {
     const { data } = await supabase
@@ -78,7 +82,7 @@ const Auth = () => {
     setIsLoading(true);
 
     try {
-      const redirectUrl = `${window.location.origin}/`;
+      const redirectUrl = safeNext ? `${window.location.origin}${safeNext}` : `${window.location.origin}/`;
 
       const { error } = await supabase.auth.signUp({
         email: authData.email,
