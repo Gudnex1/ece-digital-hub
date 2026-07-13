@@ -2,7 +2,150 @@
 // To take ownership, delete this banner line; the plugin then leaves the file alone.
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
+// src/lib/mcp/index.ts
+import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@0.20.1";
+
+// src/lib/mcp/tools/list-lecturers.ts
+import { createClient } from "npm:@supabase/supabase-js@^2.86.0";
+import { defineTool } from "npm:@lovable.dev/mcp-js@0.20.1";
+import { z } from "npm:zod@^4.4.3";
+function sb(ctx) {
+  return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+    global: { headers: { Authorization: `Bearer ${ctx.getToken()}` } },
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+}
+var list_lecturers_default = defineTool({
+  name: "list_lecturers",
+  title: "List lecturers",
+  description: "List all lecturer profiles (name, title, specialization, contact).",
+  inputSchema: { limit: z.number().int().min(1).max(200).optional().describe("Max rows to return.") },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ limit }, ctx) => {
+    if (!ctx.isAuthenticated()) return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
+    const { data, error } = await sb(ctx).from("lecturers").select("id, full_name, title, designation, specialization, email, phone, office, bio").order("full_name").limit(limit ?? 100);
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    return { content: [{ type: "text", text: JSON.stringify(data) }], structuredContent: { lecturers: data } };
+  }
+});
+
+// src/lib/mcp/tools/create-lecturer.ts
+import { createClient as createClient2 } from "npm:@supabase/supabase-js@^2.86.0";
+import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.20.1";
+import { z as z2 } from "npm:zod@^4.4.3";
+function sb2(ctx) {
+  return createClient2(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+    global: { headers: { Authorization: `Bearer ${ctx.getToken()}` } },
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+}
+var create_lecturer_default = defineTool2({
+  name: "create_lecturer",
+  title: "Create lecturer",
+  description: "Add a lecturer profile. Admin only (enforced by RLS).",
+  inputSchema: {
+    full_name: z2.string().min(1),
+    email: z2.string().email(),
+    title: z2.string().optional(),
+    designation: z2.string().optional(),
+    specialization: z2.string().optional(),
+    qualifications: z2.string().optional(),
+    bio: z2.string().optional(),
+    phone: z2.string().optional(),
+    office: z2.string().optional(),
+    profile_image_url: z2.string().url().optional()
+  },
+  annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
+  handler: async (input, ctx) => {
+    if (!ctx.isAuthenticated()) return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
+    const { data, error } = await sb2(ctx).from("lecturers").insert({ ...input, user_id: ctx.getUserId() }).select().single();
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    return { content: [{ type: "text", text: JSON.stringify(data) }], structuredContent: { lecturer: data } };
+  }
+});
+
+// src/lib/mcp/tools/list-research-areas.ts
+import { createClient as createClient3 } from "npm:@supabase/supabase-js@^2.86.0";
+import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.20.1";
+import { z as z3 } from "npm:zod@^4.4.3";
+function sb3(ctx) {
+  return createClient3(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+    global: { headers: { Authorization: `Bearer ${ctx.getToken()}` } },
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+}
+var list_research_areas_default = defineTool3({
+  name: "list_research_areas",
+  title: "List research areas",
+  description: "List department research areas with titles, descriptions, and projects.",
+  inputSchema: { limit: z3.number().int().min(1).max(200).optional() },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: async ({ limit }, ctx) => {
+    if (!ctx.isAuthenticated()) return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
+    const { data, error } = await sb3(ctx).from("research_areas").select("id, title, description, icon, projects").order("title").limit(limit ?? 100);
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    return { content: [{ type: "text", text: JSON.stringify(data) }], structuredContent: { research_areas: data } };
+  }
+});
+
+// src/lib/mcp/tools/create-research-area.ts
+import { createClient as createClient4 } from "npm:@supabase/supabase-js@^2.86.0";
+import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.20.1";
+import { z as z4 } from "npm:zod@^4.4.3";
+function sb4(ctx) {
+  return createClient4(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY, {
+    global: { headers: { Authorization: `Bearer ${ctx.getToken()}` } },
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+}
+var create_research_area_default = defineTool4({
+  name: "create_research_area",
+  title: "Create research area",
+  description: "Add a research area. Admin only (enforced by RLS).",
+  inputSchema: {
+    title: z4.string().min(1),
+    description: z4.string().min(1),
+    icon: z4.string().optional(),
+    projects: z4.array(z4.string()).optional()
+  },
+  annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false },
+  handler: async (input, ctx) => {
+    if (!ctx.isAuthenticated()) return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
+    const { data, error } = await sb4(ctx).from("research_areas").insert(input).select().single();
+    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    return { content: [{ type: "text", text: JSON.stringify(data) }], structuredContent: { research_area: data } };
+  }
+});
+
+// src/lib/mcp/tools/whoami.ts
+import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@0.20.1";
+var whoami_default = defineTool5({
+  name: "whoami",
+  title: "Who am I",
+  description: "Return the signed-in user's id and email.",
+  inputSchema: {},
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  handler: (_input, ctx) => {
+    if (!ctx.isAuthenticated()) return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
+    const info = { user_id: ctx.getUserId(), email: ctx.getUserEmail(), client_id: ctx.getClientId() };
+    return { content: [{ type: "text", text: JSON.stringify(info) }], structuredContent: info };
+  }
+});
+
+// src/lib/mcp/index.ts
+var projectRef = "smogtmfbrdrdlmftvpcj";
+var mcp_default = defineMcp({
+  name: "ece-digital-hub-mcp",
+  title: "ECE Digital Hub MCP",
+  version: "0.1.0",
+  instructions: "Tools for the ECE Digital Hub: list and manage lecturer profiles and research areas. Write tools require admin role (enforced by row-level security).",
+  auth: auth.oauth.issuer({
+    issuer: `https://${projectRef}.supabase.co/auth/v1`,
+    acceptedAudiences: "authenticated"
+  }),
+  tools: [whoami_default, list_lecturers_default, create_lecturer_default, list_research_areas_default, create_research_area_default]
+});
+
 // lovable-mcp-supabase-entry.ts
-import mcp from "npm:C:\\Users\\goodness1\\Desktop\\ece-digital\\ece-digital-hub\\src\\lib\\mcp\\index.ts";
 import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@0.20.1/stacks/supabase";
-Deno.serve(createSupabaseHandler(mcp, { functionName: "mcp" }));
+Deno.serve(createSupabaseHandler(mcp_default, { functionName: "mcp" }));
