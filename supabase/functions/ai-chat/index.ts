@@ -14,10 +14,10 @@ serve(async (req) => {
 
   try {
     const { messages, useWebSearch = false } = await req.json();
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
 
-    if (!GEMINI_API_KEY) {
-      throw new Error("GEMINI_API_KEY is not configured");
+    if (!GROQ_API_KEY) {
+      throw new Error("GROQ_API_KEY is not configured");
     }
 
     // --- Ground the model in real, current department data ---
@@ -55,6 +55,10 @@ serve(async (req) => {
       }
     }
 
+    // NOTE: Groq's models are open-source (Llama, etc.) with no built-in
+    // web search, unlike Gemini's google_search tool. If real-time web
+    // grounding matters, that needs a separate search API call injected
+    // as context here — this is where that would plug in.
     const systemPrompt = `You are a helpful AI assistant for the Department of Electronic & Computer Engineering website.
 You can answer questions about:
 - The department's programs (BSc in Electronic Engineering, Computer Engineering, and integrated ECE)
@@ -65,36 +69,29 @@ You can answer questions about:
 
 Be friendly, informative, and concise. Use the department information below as your source of truth for lecturers and research areas — never invent a name, title, or research topic that isn't listed there. If someone asks about a lecturer or topic not in this list, say you don't have that on record rather than guessing.
 ${deptContext || "\n\n(No live department data was available for this request.)"}
-${useWebSearch ? "\nYou also have real-time Google Search access for this conversation. Use it for anything time-sensitive, external, or outside the department data above, and mention when your answer relies on a web search." : ""}`;
+${useWebSearch ? "\nNote: you do not currently have live web search access. If asked something that requires real-time information, say so honestly rather than guessing." : ""}`;
 
-    const contents = messages.map((m: { role: string; content: string }) => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: m.content }],
-    }));
-
-    const geminiBody: Record<string, unknown> = {
-      contents,
-      systemInstruction: { parts: [{ text: systemPrompt }] },
-    };
-
-    if (useWebSearch) {
-      geminiBody.tools = [{ google_search: {} }];
-    }
-
-    // Non-streaming call — one complete JSON response, no SSE parsing to get wrong.
+    // Groq is OpenAI-compatible, so this is the same request/response
+    // shape the frontend already expects — true token streaming works.
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
+      "https://api.groq.com/openai/v1/chat/completions",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(geminiBody),
+        headers: {
+          Authorization: `Bearer ${GROQ_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages: [{ role: "system", content: systemPrompt }, ...messages],
+          stream: true,
+        }),
       },
     );
 
-    const raw = await response.text();
-
     if (!response.ok) {
-      console.error("Gemini API error:", response.status, raw);
+      const errorText = await response.text();
+      console.error("Groq API error:", response.status, errorText);
       if (response.status === 429) {
         return new Response(
           JSON.stringify({
@@ -107,7 +104,7 @@ ${useWebSearch ? "\nYou also have real-time Google Search access for this conver
         );
       }
       return new Response(
-        JSON.stringify({ error: "AI gateway error", detail: raw }),
+        JSON.stringify({ error: "AI gateway error", detail: errorText }),
         {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -115,36 +112,9 @@ ${useWebSearch ? "\nYou also have real-time Google Search access for this conver
       );
     }
 
-    let text = "";
-    try {
-      const parsed = JSON.parse(raw);
-      text =
-        parsed.candidates?.[0]?.content?.parts
-          ?.map((p: { text?: string }) => p.text ?? "")
-          .join("") ?? "";
-      if (!text) {
-        console.error("Gemini returned no text. Full response:", raw);
-      }
-    } catch (e) {
-      console.error("Failed to parse Gemini response:", raw);
-      throw new Error("Could not parse AI response");
-    }
-
-    // Emit as a single SSE chunk in the same shape the frontend already expects,
-    // so AIChatbot.tsx needs no changes even though this isn't token-by-token anymore.
-    const encoder = new TextEncoder();
-    const stream = new ReadableStream({
-      start(controller) {
-        const openaiChunk = { choices: [{ delta: { content: text } }] };
-        controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify(openaiChunk)}\n\n`),
-        );
-        controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-        controller.close();
-      },
-    });
-
-    return new Response(stream, {
+    // Pass Groq's stream straight through — it's already in the exact
+    // OpenAI SSE format the frontend parses, no translation needed.
+    return new Response(response.body, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (error) {
