@@ -26,6 +26,11 @@ interface Lecturer {
   phone: string | null;
   profile_image_url: string | null;
   category: string | null;
+  address?: string | null;
+  research_interests?: string | null;
+  postgraduate_supervision?: string | null;
+  google_scholar_url?: string | null;
+  researchgate_url?: string | null;
 }
 
 interface ResearchArea {
@@ -68,6 +73,11 @@ const AdminDashboard = () => {
     phone: '',
     profile_image_url: '',
     category: 'permanent',
+    address: '',
+    research_interests: '',
+    postgraduate_supervision: '',
+    google_scholar_url: '',
+    researchgate_url: '',
   });
 
   const [newResearchArea, setNewResearchArea] = useState({
@@ -212,6 +222,11 @@ const AdminDashboard = () => {
         phone: '',
         profile_image_url: '',
         category: 'permanent',
+        address: '',
+        research_interests: '',
+        postgraduate_supervision: '',
+        google_scholar_url: '',
+        researchgate_url: '',
       });
       setEditingLecturerId(null);
       loadData();
