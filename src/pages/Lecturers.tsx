@@ -165,7 +165,7 @@ const Lecturers = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4 text-white">
-              Our Faculty
+              Our Department
             </h1>
             <p className="text-lg text-primary-foreground/90 text-white">
               Meet the academic and non-teaching staff powering the Department of
