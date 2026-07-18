@@ -122,7 +122,7 @@ const AdminDashboard = () => {
       supabase.from('user_roles').select('*').eq('role', 'admin'),
     ]);
 
-    if (lecturersRes.data) setLecturers(lecturersRes.data);
+    if (lecturersRes.data) setLecturers(lecturersRes.data as unknown as Lecturer[]);
     if (researchRes.data) setResearchAreas(researchRes.data);
     
     // Fetch profiles for admin users
@@ -184,7 +184,7 @@ const AdminDashboard = () => {
       if (editingLecturerId) {
         const { error } = await supabase
           .from('lecturers')
-          .update({ ...newLecturer })
+          .update({ ...newLecturer } as never)
           .eq('id', editingLecturerId);
 
         if (error) throw error;
@@ -192,7 +192,7 @@ const AdminDashboard = () => {
         toast.success('Lecturer updated successfully');
       } else {
         const { error } = await supabase.from('lecturers').insert([
-          { ...newLecturer },
+          { ...newLecturer } as never,
         ]);
 
         if (error) throw error;
