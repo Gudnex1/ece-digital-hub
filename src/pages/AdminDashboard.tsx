@@ -26,6 +26,11 @@ interface Lecturer {
   phone: string | null;
   profile_image_url: string | null;
   category: string | null;
+  address?: string | null;
+  research_interests?: string | null;
+  postgraduate_supervision?: string | null;
+  google_scholar_url?: string | null;
+  researchgate_url?: string | null;
 }
 
 interface ResearchArea {
@@ -68,6 +73,11 @@ const AdminDashboard = () => {
     phone: '',
     profile_image_url: '',
     category: 'permanent',
+    address: '',
+    research_interests: '',
+    postgraduate_supervision: '',
+    google_scholar_url: '',
+    researchgate_url: '',
   });
 
   const [newResearchArea, setNewResearchArea] = useState({
@@ -212,6 +222,11 @@ const AdminDashboard = () => {
         phone: '',
         profile_image_url: '',
         category: 'permanent',
+        address: '',
+        research_interests: '',
+        postgraduate_supervision: '',
+        google_scholar_url: '',
+        researchgate_url: '',
       });
       setEditingLecturerId(null);
       loadData();
@@ -491,6 +506,56 @@ const AdminDashboard = () => {
                         value={newLecturer.bio}
                         onChange={(e) => setNewLecturer({ ...newLecturer, bio: e.target.value })}
                         rows={4}
+                      />
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="google_scholar_url">Google Scholar URL</Label>
+                        <Input
+                          id="google_scholar_url"
+                          placeholder="https://scholar.google.com/..."
+                          value={newLecturer.google_scholar_url}
+                          onChange={(e) => setNewLecturer({ ...newLecturer, google_scholar_url: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="researchgate_url">ResearchGate URL</Label>
+                        <Input
+                          id="researchgate_url"
+                          placeholder="https://www.researchgate.net/profile/..."
+                          value={newLecturer.researchgate_url}
+                          onChange={(e) => setNewLecturer({ ...newLecturer, researchgate_url: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="address">Address</Label>
+                      <Textarea
+                        id="address"
+                        placeholder="Office address"
+                        value={newLecturer.address}
+                        onChange={(e) => setNewLecturer({ ...newLecturer, address: e.target.value })}
+                        rows={3}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="research_interests">Research Interests (one per line)</Label>
+                      <Textarea
+                        id="research_interests"
+                        placeholder="Renewable Energy Systems&#10;Machine Learning for IoT"
+                        value={newLecturer.research_interests}
+                        onChange={(e) => setNewLecturer({ ...newLecturer, research_interests: e.target.value })}
+                        rows={4}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="postgraduate_supervision">Postgraduate Supervision</Label>
+                      <Textarea
+                        id="postgraduate_supervision"
+                        placeholder="PhD:&#10;• Student name, thesis title&#10;&#10;Masters:&#10;• Student name, thesis title"
+                        value={newLecturer.postgraduate_supervision}
+                        onChange={(e) => setNewLecturer({ ...newLecturer, postgraduate_supervision: e.target.value })}
+                        rows={5}
                       />
                     </div>
                     <Button type="submit" className="w-full">

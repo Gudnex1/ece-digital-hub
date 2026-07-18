@@ -1,8 +1,8 @@
-import { GraduationCap, Mail, Phone, MapPin, Award, BookOpen } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,6 +21,11 @@ interface Lecturer {
   bio: string | null;
   profile_image_url: string | null;
   category: string | null;
+  address?: string | null;
+  research_interests?: string | null;
+  postgraduate_supervision?: string | null;
+  google_scholar_url?: string | null;
+  researchgate_url?: string | null;
 }
 
 type CategoryKey = 'permanent' | 'adjunct' | 'admin' | 'technical';
@@ -71,7 +76,7 @@ const Lecturers = () => {
         error
       } = await supabase
         .from('lecturers')
-        .select('id, full_name, title, specialization, designation, qualifications, office, bio, profile_image_url, category')
+        .select('id, full_name, title, specialization, designation, qualifications, office, bio, profile_image_url, category, address, research_interests, postgraduate_supervision, google_scholar_url, researchgate_url')
         .order('full_name');
       if (error) throw error;
       setLecturers((data || []) as unknown as Lecturer[]);
@@ -230,71 +235,123 @@ const Lecturers = () => {
 
       {/* Profile Modal */}
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 gap-0">
           {selected && (
-            <>
-              <DialogHeader>
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
-                  {selected.profile_image_url ? (
-                    <img
-                      src={selected.profile_image_url}
-                      alt={selected.full_name}
-                      className="h-28 w-28 rounded-full object-cover ring-4 ring-primary/20 flex-shrink-0"
-                    />
-                  ) : (
-                    <div className="h-28 w-28 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <GraduationCap className="h-12 w-12 text-primary" />
+            <div className="grid grid-cols-1 md:grid-cols-[260px_1fr]">
+              {/* Left column */}
+              <aside className="bg-muted/40 p-6 md:p-8 space-y-5 border-b md:border-b-0 md:border-r border-border/60">
+                {selected.profile_image_url ? (
+                  <img
+                    src={selected.profile_image_url}
+                    alt={selected.full_name}
+                    className="w-full aspect-square rounded-md object-cover"
+                  />
+                ) : (
+                  <div className="w-full aspect-square rounded-md bg-primary/10 flex items-center justify-center">
+                    <GraduationCap className="h-16 w-16 text-primary" />
+                  </div>
+                )}
+
+                {selected.google_scholar_url && (
+                  <a
+                    href={selected.google_scholar_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block text-sm font-medium text-primary hover:underline"
+                  >
+                    Google Scholar Profile
+                  </a>
+                )}
+                {selected.researchgate_url && (
+                  <a
+                    href={selected.researchgate_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block text-sm font-medium text-primary hover:underline"
+                  >
+                    ResearchGate Profile
+                  </a>
+                )}
+
+                <div className="space-y-4 text-sm">
+                  {selected.office && (
+                    <div>
+                      <p className="font-semibold text-foreground">Office</p>
+                      <p className="text-muted-foreground whitespace-pre-line">{selected.office}</p>
                     </div>
                   )}
-                  <div className="flex-1">
-                    <DialogTitle className="text-2xl">
-                      {selected.title ? `${selected.title} ${selected.full_name}` : selected.full_name}
-                    </DialogTitle>
-                    {selected.designation && (
-                      <DialogDescription className="text-primary font-medium mt-1">
-                        {selected.designation}
-                      </DialogDescription>
-                    )}
-                  </div>
-                </div>
-              </DialogHeader>
-
-              <div className="mt-6 space-y-5">
-                {selected.bio && (
                   <div>
-                    <h4 className="text-sm font-semibold text-foreground mb-1">Biography</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{selected.bio}</p>
+                    <p className="font-semibold text-foreground">Email</p>
+                    <p className="text-primary break-all">
+                      {/* email not shown publicly by RLS; leave placeholder if absent */}
+                      <span className="text-muted-foreground text-xs">Contact via department</span>
+                    </p>
                   </div>
-                )}
-                {selected.specialization && (
-                  <div className="flex gap-3">
-                    <BookOpen className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                  {selected.address && (
                     <div>
-                      <h4 className="text-sm font-semibold text-foreground">Specialization</h4>
-                      <p className="text-sm text-muted-foreground">{selected.specialization}</p>
+                      <p className="font-semibold text-foreground">Address</p>
+                      <p className="text-muted-foreground whitespace-pre-line">{selected.address}</p>
                     </div>
-                  </div>
+                  )}
+                </div>
+              </aside>
+
+              {/* Right column */}
+              <div className="p-6 md:p-10">
+                <DialogTitle className="text-3xl md:text-4xl font-bold leading-tight">
+                  {selected.title ? `${selected.title} ${selected.full_name}` : selected.full_name}
+                </DialogTitle>
+                <div className="mt-3 h-1 w-16 bg-foreground/80 rounded-full" />
+
+                {selected.designation && (
+                  <p className="mt-6 text-base text-foreground">{selected.designation}</p>
                 )}
                 {selected.qualifications && (
-                  <div className="flex gap-3">
-                    <Award className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="text-sm font-semibold text-foreground">Qualifications</h4>
-                      <p className="text-sm text-muted-foreground">{selected.qualifications}</p>
-                    </div>
-                  </div>
+                  <p className="mt-3 text-sm text-muted-foreground whitespace-pre-line">
+                    {selected.qualifications}
+                  </p>
                 )}
-                {selected.office && (
-                  <div className="flex gap-3">
-                    <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="text-sm font-semibold text-foreground">Office</h4>
-                      <p className="text-sm text-muted-foreground">{selected.office}</p>
+
+                {selected.research_interests && (
+                  <section className="mt-8">
+                    <h3 className="text-base font-semibold text-foreground mb-2">Research Interests</h3>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      {selected.research_interests.split('\n').filter(Boolean).map((line, i) => (
+                        <li key={i} className="flex gap-2">
+                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                          <span>{line.trim()}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+
+                {selected.postgraduate_supervision && (
+                  <section className="mt-8">
+                    <h3 className="text-base font-semibold text-foreground mb-2">Postgraduate Supervision</h3>
+                    <div className="space-y-2 text-sm text-muted-foreground whitespace-pre-line">
+                      {selected.postgraduate_supervision}
                     </div>
-                  </div>
+                  </section>
+                )}
+
+                {selected.specialization && (
+                  <section className="mt-8">
+                    <h3 className="text-base font-semibold text-foreground mb-2">Specialization</h3>
+                    <p className="text-sm text-muted-foreground">{selected.specialization}</p>
+                  </section>
+                )}
+
+                {selected.bio && (
+                  <section className="mt-8">
+                    <h3 className="text-base font-semibold text-foreground mb-2">Biography</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+                      {selected.bio}
+                    </p>
+                  </section>
                 )}
               </div>
-            </>
+            </div>
           )}
         </DialogContent>
       </Dialog>
