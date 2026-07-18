@@ -443,6 +443,23 @@ const AdminDashboard = () => {
                         />
                       </div>
                       <div className="space-y-2">
+                        <Label htmlFor="category">Staff Category *</Label>
+                        <Select
+                          value={newLecturer.category}
+                          onValueChange={(v) => setNewLecturer({ ...newLecturer, category: v })}
+                        >
+                          <SelectTrigger id="category">
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="permanent">Academic — Permanent Staff</SelectItem>
+                            <SelectItem value="adjunct">Academic — Adjunct Staff</SelectItem>
+                            <SelectItem value="admin">Non-Teaching — Administrative</SelectItem>
+                            <SelectItem value="technical">Non-Teaching — Technical</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
                         <Label htmlFor="profile_image">Profile Image</Label>
                         <Input
                           id="profile_image"
