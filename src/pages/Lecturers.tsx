@@ -4,6 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -19,6 +20,7 @@ interface Lecturer {
   office: string | null;
   bio: string | null;
   profile_image_url: string | null;
+  category: string | null;
 }
 
 type CategoryKey = 'permanent' | 'adjunct' | 'admin' | 'technical';
@@ -43,6 +45,9 @@ const CATEGORY_META: Record<CategoryKey, { label: string; description: string }>
 };
 
 function categorize(l: Lecturer): CategoryKey {
+  const c = (l.category ?? '').toLowerCase();
+  if (c === 'permanent' || c === 'adjunct' || c === 'admin' || c === 'technical') return c;
+  // Fallback for legacy rows without a category set
   const s = `${l.designation ?? ''} ${l.title ?? ''}`.toLowerCase();
   if (/(technician|technologist|technical)/.test(s)) return 'technical';
   if (/(admin|secretar|clerk|officer|registrar|account)/.test(s)) return 'admin';
@@ -66,10 +71,10 @@ const Lecturers = () => {
         error
       } = await supabase
         .from('lecturers')
-        .select('id, full_name, title, specialization, designation, qualifications, office, bio, profile_image_url')
+        .select('id, full_name, title, specialization, designation, qualifications, office, bio, profile_image_url, category')
         .order('full_name');
       if (error) throw error;
-      setLecturers(data || []);
+      setLecturers((data || []) as unknown as Lecturer[]);
     } catch (error) {
       console.error('Error loading lecturers:', error);
     } finally {
@@ -179,27 +184,45 @@ const Lecturers = () => {
             </TabsList>
 
             <TabsContent value="academic" className="space-y-12">
-              {(['permanent', 'adjunct'] as CategoryKey[]).map(key => (
-                <div key={key}>
-                  <div className="mb-6">
-                    <h2 className="text-2xl font-bold text-foreground">{CATEGORY_META[key].label}</h2>
-                    <p className="text-sm text-muted-foreground mt-1">{CATEGORY_META[key].description}</p>
-                  </div>
-                  {renderGrid(grouped[key])}
-                </div>
-              ))}
+              <Accordion type="multiple" className="space-y-4">
+                {(['permanent', 'adjunct'] as CategoryKey[]).map(key => (
+                  <AccordionItem key={key} value={key} className="border border-border/60 rounded-lg px-4">
+                    <AccordionTrigger className="hover:no-underline">
+                      <div className="text-left">
+                        <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                          {CATEGORY_META[key].label}
+                          <Badge variant="secondary">{grouped[key].length}</Badge>
+                        </h2>
+                        <p className="text-sm text-muted-foreground mt-1 font-normal">{CATEGORY_META[key].description}</p>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-4 pb-6">
+                      {renderGrid(grouped[key])}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </TabsContent>
 
             <TabsContent value="non-teaching" className="space-y-12">
-              {(['admin', 'technical'] as CategoryKey[]).map(key => (
-                <div key={key}>
-                  <div className="mb-6">
-                    <h2 className="text-2xl font-bold text-foreground">{CATEGORY_META[key].label}</h2>
-                    <p className="text-sm text-muted-foreground mt-1">{CATEGORY_META[key].description}</p>
-                  </div>
-                  {renderGrid(grouped[key])}
-                </div>
-              ))}
+              <Accordion type="multiple" className="space-y-4">
+                {(['admin', 'technical'] as CategoryKey[]).map(key => (
+                  <AccordionItem key={key} value={key} className="border border-border/60 rounded-lg px-4">
+                    <AccordionTrigger className="hover:no-underline">
+                      <div className="text-left">
+                        <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                          {CATEGORY_META[key].label}
+                          <Badge variant="secondary">{grouped[key].length}</Badge>
+                        </h2>
+                        <p className="text-sm text-muted-foreground mt-1 font-normal">{CATEGORY_META[key].description}</p>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-4 pb-6">
+                      {renderGrid(grouped[key])}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </TabsContent>
           </Tabs>
         </div>

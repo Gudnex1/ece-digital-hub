@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -24,6 +25,7 @@ interface Lecturer {
   email: string;
   phone: string | null;
   profile_image_url: string | null;
+  category: string | null;
 }
 
 interface ResearchArea {
@@ -65,6 +67,7 @@ const AdminDashboard = () => {
     email: '',
     phone: '',
     profile_image_url: '',
+    category: 'permanent',
   });
 
   const [newResearchArea, setNewResearchArea] = useState({
@@ -119,7 +122,7 @@ const AdminDashboard = () => {
       supabase.from('user_roles').select('*').eq('role', 'admin'),
     ]);
 
-    if (lecturersRes.data) setLecturers(lecturersRes.data);
+    if (lecturersRes.data) setLecturers(lecturersRes.data as unknown as Lecturer[]);
     if (researchRes.data) setResearchAreas(researchRes.data);
     
     // Fetch profiles for admin users
@@ -181,7 +184,7 @@ const AdminDashboard = () => {
       if (editingLecturerId) {
         const { error } = await supabase
           .from('lecturers')
-          .update({ ...newLecturer })
+          .update({ ...newLecturer } as never)
           .eq('id', editingLecturerId);
 
         if (error) throw error;
@@ -189,7 +192,7 @@ const AdminDashboard = () => {
         toast.success('Lecturer updated successfully');
       } else {
         const { error } = await supabase.from('lecturers').insert([
-          { ...newLecturer },
+          { ...newLecturer } as never,
         ]);
 
         if (error) throw error;
@@ -208,6 +211,7 @@ const AdminDashboard = () => {
         email: '',
         phone: '',
         profile_image_url: '',
+        category: 'permanent',
       });
       setEditingLecturerId(null);
       loadData();
@@ -437,6 +441,23 @@ const AdminDashboard = () => {
                           value={newLecturer.phone}
                           onChange={(e) => setNewLecturer({ ...newLecturer, phone: e.target.value })}
                         />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="category">Staff Category *</Label>
+                        <Select
+                          value={newLecturer.category}
+                          onValueChange={(v) => setNewLecturer({ ...newLecturer, category: v })}
+                        >
+                          <SelectTrigger id="category">
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="permanent">Academic — Permanent Staff</SelectItem>
+                            <SelectItem value="adjunct">Academic — Adjunct Staff</SelectItem>
+                            <SelectItem value="admin">Non-Teaching — Administrative</SelectItem>
+                            <SelectItem value="technical">Non-Teaching — Technical</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="profile_image">Profile Image</Label>
