@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -24,6 +25,7 @@ interface Lecturer {
   email: string;
   phone: string | null;
   profile_image_url: string | null;
+  category: string | null;
 }
 
 interface ResearchArea {
@@ -65,6 +67,7 @@ const AdminDashboard = () => {
     email: '',
     phone: '',
     profile_image_url: '',
+    category: 'permanent',
   });
 
   const [newResearchArea, setNewResearchArea] = useState({
@@ -208,6 +211,7 @@ const AdminDashboard = () => {
         email: '',
         phone: '',
         profile_image_url: '',
+        category: 'permanent',
       });
       setEditingLecturerId(null);
       loadData();
