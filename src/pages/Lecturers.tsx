@@ -1,8 +1,8 @@
-import { GraduationCap, Mail, Phone, MapPin, Award, BookOpen } from 'lucide-react';
+import { GraduationCap, Mail, MapPin, Phone, GraduationCap as GradIcon, BookOpen, Link as LinkIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,6 +21,11 @@ interface Lecturer {
   bio: string | null;
   profile_image_url: string | null;
   category: string | null;
+  address?: string | null;
+  research_interests?: string | null;
+  postgraduate_supervision?: string | null;
+  google_scholar_url?: string | null;
+  researchgate_url?: string | null;
 }
 
 type CategoryKey = 'permanent' | 'adjunct' | 'admin' | 'technical';
