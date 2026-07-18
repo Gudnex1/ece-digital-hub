@@ -1,4 +1,4 @@
-import { GraduationCap, Mail, MapPin, Phone, GraduationCap as GradIcon, BookOpen, Link as LinkIcon } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -76,7 +76,7 @@ const Lecturers = () => {
         error
       } = await supabase
         .from('lecturers')
-        .select('id, full_name, title, specialization, designation, qualifications, office, bio, profile_image_url, category')
+        .select('id, full_name, title, specialization, designation, qualifications, office, bio, profile_image_url, category, address, research_interests, postgraduate_supervision, google_scholar_url, researchgate_url')
         .order('full_name');
       if (error) throw error;
       setLecturers((data || []) as unknown as Lecturer[]);
