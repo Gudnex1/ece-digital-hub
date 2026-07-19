@@ -251,10 +251,10 @@ const Lecturers = () => {
                   <img
                     src={selected.profile_image_url}
                     alt={selected.full_name}
-                    className="w-full aspect-square rounded-md object-cover"
+                    className="w-32 h-32 mx-auto md:w-full md:h-auto md:mx-0 md:aspect-square rounded-md object-cover"
                   />
                 ) : (
-                  <div className="w-full aspect-square rounded-md bg-primary/10 flex items-center justify-center">
+                  <div className="w-32 h-32 mx-auto md:w-full md:h-auto md:mx-0 md:aspect-square rounded-md bg-primary/10 flex items-center justify-center">
                     <GraduationCap className="h-16 w-16 text-primary" />
                   </div>
                 )}
@@ -264,9 +264,10 @@ const Lecturers = () => {
                     href={selected.google_scholar_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="block text-sm font-medium text-primary hover:underline"
+                    className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
                   >
-                    Google Scholar Profile
+                    <GraduationCap className="h-4 w-4 flex-shrink-0" />
+                    <span>Google Scholar Profile</span>
                   </a>
                 )}
                 {selected.researchgate_url && (
@@ -274,26 +275,27 @@ const Lecturers = () => {
                     href={selected.researchgate_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="block text-sm font-medium text-primary hover:underline"
+                    className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
                   >
-                    ResearchGate Profile
+                    <BookOpen className="h-4 w-4 flex-shrink-0" />
+                    <span>ResearchGate Profile</span>
                   </a>
                 )}
 
                 <div className="space-y-4 text-sm">
-                  {selected.office && (
+                  {selected.email && (
                     <div>
-                      <p className="font-semibold text-foreground">Office</p>
-                      <p className="text-muted-foreground whitespace-pre-line">{selected.office}</p>
+                      <p className="font-semibold text-foreground flex items-center gap-2">
+                        <Mail className="h-4 w-4" /> Email
+                      </p>
+                      <a
+                        href={`mailto:${selected.email}`}
+                        className="text-primary hover:underline break-all"
+                      >
+                        {selected.email}
+                      </a>
                     </div>
                   )}
-                  <div>
-                    <p className="font-semibold text-foreground">Email</p>
-                    <p className="text-primary break-all">
-                      {/* email not shown publicly by RLS; leave placeholder if absent */}
-                      <span className="text-muted-foreground text-xs">Contact via department</span>
-                    </p>
-                  </div>
                   {selected.address && (
                     <div>
                       <p className="font-semibold text-foreground">Address</p>
@@ -352,9 +354,23 @@ const Lecturers = () => {
                 {selected.bio && (
                   <section className="mt-8">
                     <h3 className="text-base font-semibold text-foreground mb-2">Biography</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+                    <p
+                      className={`text-sm text-muted-foreground leading-relaxed whitespace-pre-line ${
+                        !bioExpanded && selected.bio.length > 320 ? 'line-clamp-4' : ''
+                      }`}
+                    >
                       {selected.bio}
                     </p>
+                    {selected.bio.length > 320 && (
+                      <Button
+                        variant="link"
+                        size="sm"
+                        className="px-0 mt-1 h-auto"
+                        onClick={() => setBioExpanded(v => !v)}
+                      >
+                        {bioExpanded ? 'Show less' : 'Read more'}
+                      </Button>
+                    )}
                   </section>
                 )}
               </div>
