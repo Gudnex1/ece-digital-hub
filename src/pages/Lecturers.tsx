@@ -1,10 +1,11 @@
-import { GraduationCap } from 'lucide-react';
+import { GraduationCap, BookOpen, Mail } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -22,6 +23,7 @@ interface Lecturer {
   profile_image_url: string | null;
   category: string | null;
   address?: string | null;
+  email?: string | null;
   research_interests?: string | null;
   postgraduate_supervision?: string | null;
   google_scholar_url?: string | null;
@@ -64,6 +66,11 @@ const Lecturers = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [lecturers, setLecturers] = useState<Lecturer[]>([]);
   const [selected, setSelected] = useState<Lecturer | null>(null);
+  const [bioExpanded, setBioExpanded] = useState(false);
+
+  useEffect(() => {
+    setBioExpanded(false);
+  }, [selected]);
 
   useEffect(() => {
     loadLecturers();
@@ -76,7 +83,7 @@ const Lecturers = () => {
         error
       } = await supabase
         .from('lecturers')
-        .select('id, full_name, title, specialization, designation, qualifications, office, bio, profile_image_url, category, address, research_interests, postgraduate_supervision, google_scholar_url, researchgate_url')
+        .select('id, full_name, title, specialization, designation, qualifications, office, bio, profile_image_url, category, address, email, research_interests, postgraduate_supervision, google_scholar_url, researchgate_url')
         .order('full_name');
       if (error) throw error;
       setLecturers((data || []) as unknown as Lecturer[]);
