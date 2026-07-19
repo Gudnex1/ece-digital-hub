@@ -442,14 +442,6 @@ const AdminDashboard = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="office">Office</Label>
-                        <Input
-                          id="office"
-                          value={newLecturer.office}
-                          onChange={(e) => setNewLecturer({ ...newLecturer, office: e.target.value })}
-                        />
-                      </div>
-                      <div className="space-y-2">
                         <Label htmlFor="phone">Phone</Label>
                         <Input
                           id="phone"
@@ -549,14 +541,47 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="postgraduate_supervision">Postgraduate Supervision</Label>
-                      <Textarea
-                        id="postgraduate_supervision"
-                        placeholder="PhD:&#10;• Student name, thesis title&#10;&#10;Masters:&#10;• Student name, thesis title"
-                        value={newLecturer.postgraduate_supervision}
-                        onChange={(e) => setNewLecturer({ ...newLecturer, postgraduate_supervision: e.target.value })}
-                        rows={5}
-                      />
+                      <Label>Postgraduate Supervision</Label>
+                      <p className="text-xs text-muted-foreground">
+                        Select the supervision levels this lecturer offers.
+                      </p>
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        {[
+                          'PhD Students',
+                          'MSc Students',
+                          'MTech Students',
+                          'MPhil Students',
+                          'PGD Students',
+                          'Undergraduate Projects',
+                        ].map((opt) => {
+                          const selectedItems = newLecturer.postgraduate_supervision
+                            .split('\n')
+                            .map(s => s.trim())
+                            .filter(Boolean);
+                          const checked = selectedItems.includes(opt);
+                          return (
+                            <label
+                              key={opt}
+                              className="flex items-center gap-2 text-sm border rounded-md px-3 py-2 cursor-pointer hover:bg-muted/50"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={checked}
+                                onChange={(e) => {
+                                  const next = e.target.checked
+                                    ? [...selectedItems, opt]
+                                    : selectedItems.filter(s => s !== opt);
+                                  setNewLecturer({
+                                    ...newLecturer,
+                                    postgraduate_supervision: next.join('\n'),
+                                  });
+                                }}
+                              />
+                              <span>{opt}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
                     </div>
                     <Button type="submit" className="w-full">
                       <Plus className="h-4 w-4 mr-2" />
