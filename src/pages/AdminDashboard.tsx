@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Trash2, Plus, Upload } from 'lucide-react';
+import { Trash2, Plus, Upload, Pencil, X } from 'lucide-react';
 
 interface Lecturer {
   id: string;
@@ -88,6 +88,7 @@ const AdminDashboard = () => {
   });
 
   const [editingLecturerId, setEditingLecturerId] = useState<string | null>(null);
+  const [editingResearchAreaId, setEditingResearchAreaId] = useState<string | null>(null);
 
   useEffect(() => {
     checkAdmin();
@@ -256,21 +257,84 @@ const AdminDashboard = () => {
         .filter(p => p.trim())
         .map(p => p.trim());
 
-      const { error } = await supabase.from('research_areas').insert([{
-        title: newResearchArea.title,
-        description: newResearchArea.description,
-        icon: newResearchArea.icon || null,
-        projects,
-      }]);
+      if (editingResearchAreaId) {
+        const { error } = await supabase
+          .from('research_areas')
+          .update({
+            title: newResearchArea.title,
+            description: newResearchArea.description,
+            icon: newResearchArea.icon || null,
+            projects,
+          })
+          .eq('id', editingResearchAreaId);
+        if (error) throw error;
+        toast.success('Research area updated successfully');
+      } else {
+        const { error } = await supabase.from('research_areas').insert([{
+          title: newResearchArea.title,
+          description: newResearchArea.description,
+          icon: newResearchArea.icon || null,
+          projects,
+        }]);
+        if (error) throw error;
+        toast.success('Research area added successfully');
+      }
 
-      if (error) throw error;
-
-      toast.success('Research area added successfully');
       setNewResearchArea({ title: '', description: '', icon: '', projects: '' });
+      setEditingResearchAreaId(null);
       loadData();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to add research area');
+      toast.error(error.message || 'Failed to save research area');
     }
+  };
+
+  const handleEditLecturer = (lecturer: Lecturer) => {
+    setEditingLecturerId(lecturer.id);
+    setNewLecturer({
+      full_name: lecturer.full_name || '',
+      title: lecturer.title || '',
+      specialization: lecturer.specialization || '',
+      designation: lecturer.designation || '',
+      office: lecturer.office || '',
+      qualifications: lecturer.qualifications || '',
+      bio: lecturer.bio || '',
+      email: lecturer.email || '',
+      phone: lecturer.phone || '',
+      profile_image_url: lecturer.profile_image_url || '',
+      category: lecturer.category || 'permanent',
+      address: lecturer.address || '',
+      research_interests: lecturer.research_interests || '',
+      postgraduate_supervision: lecturer.postgraduate_supervision || '',
+      google_scholar_url: lecturer.google_scholar_url || '',
+      researchgate_url: lecturer.researchgate_url || '',
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEditLecturer = () => {
+    setEditingLecturerId(null);
+    setNewLecturer({
+      full_name: '', title: '', specialization: '', designation: '', office: '',
+      qualifications: '', bio: '', email: '', phone: '', profile_image_url: '',
+      category: 'permanent', address: '', research_interests: '',
+      postgraduate_supervision: '', google_scholar_url: '', researchgate_url: '',
+    });
+  };
+
+  const handleEditResearchArea = (area: ResearchArea) => {
+    setEditingResearchAreaId(area.id);
+    setNewResearchArea({
+      title: area.title || '',
+      description: area.description || '',
+      icon: area.icon || '',
+      projects: (area.projects || []).join('\n'),
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEditResearchArea = () => {
+    setEditingResearchAreaId(null);
+    setNewResearchArea({ title: '', description: '', icon: '', projects: '' });
   };
 
   const handleDeleteResearchArea = async (id: string) => {
