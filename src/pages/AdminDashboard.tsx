@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Trash2, Plus, Upload } from 'lucide-react';
+import { Trash2, Plus, Upload, Pencil, X } from 'lucide-react';
 
 interface Lecturer {
   id: string;
@@ -88,6 +88,7 @@ const AdminDashboard = () => {
   });
 
   const [editingLecturerId, setEditingLecturerId] = useState<string | null>(null);
+  const [editingResearchAreaId, setEditingResearchAreaId] = useState<string | null>(null);
 
   useEffect(() => {
     checkAdmin();
@@ -256,21 +257,84 @@ const AdminDashboard = () => {
         .filter(p => p.trim())
         .map(p => p.trim());
 
-      const { error } = await supabase.from('research_areas').insert([{
-        title: newResearchArea.title,
-        description: newResearchArea.description,
-        icon: newResearchArea.icon || null,
-        projects,
-      }]);
+      if (editingResearchAreaId) {
+        const { error } = await supabase
+          .from('research_areas')
+          .update({
+            title: newResearchArea.title,
+            description: newResearchArea.description,
+            icon: newResearchArea.icon || null,
+            projects,
+          })
+          .eq('id', editingResearchAreaId);
+        if (error) throw error;
+        toast.success('Research area updated successfully');
+      } else {
+        const { error } = await supabase.from('research_areas').insert([{
+          title: newResearchArea.title,
+          description: newResearchArea.description,
+          icon: newResearchArea.icon || null,
+          projects,
+        }]);
+        if (error) throw error;
+        toast.success('Research area added successfully');
+      }
 
-      if (error) throw error;
-
-      toast.success('Research area added successfully');
       setNewResearchArea({ title: '', description: '', icon: '', projects: '' });
+      setEditingResearchAreaId(null);
       loadData();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to add research area');
+      toast.error(error.message || 'Failed to save research area');
     }
+  };
+
+  const handleEditLecturer = (lecturer: Lecturer) => {
+    setEditingLecturerId(lecturer.id);
+    setNewLecturer({
+      full_name: lecturer.full_name || '',
+      title: lecturer.title || '',
+      specialization: lecturer.specialization || '',
+      designation: lecturer.designation || '',
+      office: lecturer.office || '',
+      qualifications: lecturer.qualifications || '',
+      bio: lecturer.bio || '',
+      email: lecturer.email || '',
+      phone: lecturer.phone || '',
+      profile_image_url: lecturer.profile_image_url || '',
+      category: lecturer.category || 'permanent',
+      address: lecturer.address || '',
+      research_interests: lecturer.research_interests || '',
+      postgraduate_supervision: lecturer.postgraduate_supervision || '',
+      google_scholar_url: lecturer.google_scholar_url || '',
+      researchgate_url: lecturer.researchgate_url || '',
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEditLecturer = () => {
+    setEditingLecturerId(null);
+    setNewLecturer({
+      full_name: '', title: '', specialization: '', designation: '', office: '',
+      qualifications: '', bio: '', email: '', phone: '', profile_image_url: '',
+      category: 'permanent', address: '', research_interests: '',
+      postgraduate_supervision: '', google_scholar_url: '', researchgate_url: '',
+    });
+  };
+
+  const handleEditResearchArea = (area: ResearchArea) => {
+    setEditingResearchAreaId(area.id);
+    setNewResearchArea({
+      title: area.title || '',
+      description: area.description || '',
+      icon: area.icon || '',
+      projects: (area.projects || []).join('\n'),
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEditResearchArea = () => {
+    setEditingResearchAreaId(null);
+    setNewResearchArea({ title: '', description: '', icon: '', projects: '' });
   };
 
   const handleDeleteResearchArea = async (id: string) => {
@@ -386,11 +450,13 @@ const AdminDashboard = () => {
                 <CardHeader className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-primary/10 rounded-lg">
-                      <Plus className="h-6 w-6 text-primary" />
+                      {editingLecturerId ? <Pencil className="h-6 w-6 text-primary" /> : <Plus className="h-6 w-6 text-primary" />}
                     </div>
                     <div>
-                      <CardTitle className="text-2xl">Add New Lecturer</CardTitle>
-                      <CardDescription className="text-base">Fill in the details to add a new lecturer profile</CardDescription>
+                      <CardTitle className="text-2xl">{editingLecturerId ? 'Edit Lecturer' : 'Add New Lecturer'}</CardTitle>
+                      <CardDescription className="text-base">
+                        {editingLecturerId ? 'Update this lecturer profile' : 'Fill in the details to add a new lecturer profile'}
+                      </CardDescription>
                     </div>
                   </div>
                 </CardHeader>
@@ -583,10 +649,17 @@ const AdminDashboard = () => {
                         })}
                       </div>
                     </div>
-                    <Button type="submit" className="w-full">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Lecturer
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button type="submit" className="flex-1">
+                        {editingLecturerId ? <Pencil className="h-4 w-4 mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
+                        {editingLecturerId ? 'Update Lecturer' : 'Add Lecturer'}
+                      </Button>
+                      {editingLecturerId && (
+                        <Button type="button" variant="outline" onClick={cancelEditLecturer}>
+                          <X className="h-4 w-4 mr-2" /> Cancel
+                        </Button>
+                      )}
+                    </div>
                   </form>
                 </CardContent>
               </Card>
@@ -635,6 +708,14 @@ const AdminDashboard = () => {
                           <Button
                             variant="ghost"
                             size="icon"
+                            className="absolute top-3 right-12 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary hover:text-primary-foreground"
+                            onClick={() => handleEditLecturer(lecturer)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive hover:text-destructive-foreground"
                             onClick={() => handleDeleteLecturer(lecturer.id)}
                           >
@@ -653,11 +734,13 @@ const AdminDashboard = () => {
                 <CardHeader className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-primary/10 rounded-lg">
-                      <Plus className="h-6 w-6 text-primary" />
+                      {editingResearchAreaId ? <Pencil className="h-6 w-6 text-primary" /> : <Plus className="h-6 w-6 text-primary" />}
                     </div>
                     <div>
-                      <CardTitle className="text-2xl">Add Research Area</CardTitle>
-                      <CardDescription className="text-base">Add a new research area with projects</CardDescription>
+                      <CardTitle className="text-2xl">{editingResearchAreaId ? 'Edit Research Area' : 'Add Research Area'}</CardTitle>
+                      <CardDescription className="text-base">
+                        {editingResearchAreaId ? 'Update this research area' : 'Add a new research area with projects'}
+                      </CardDescription>
                     </div>
                   </div>
                 </CardHeader>
@@ -692,10 +775,17 @@ const AdminDashboard = () => {
                         rows={5}
                       />
                     </div>
-                    <Button type="submit" className="w-full">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Research Area
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button type="submit" className="flex-1">
+                        {editingResearchAreaId ? <Pencil className="h-4 w-4 mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
+                        {editingResearchAreaId ? 'Update Research Area' : 'Add Research Area'}
+                      </Button>
+                      {editingResearchAreaId && (
+                        <Button type="button" variant="outline" onClick={cancelEditResearchArea}>
+                          <X className="h-4 w-4 mr-2" /> Cancel
+                        </Button>
+                      )}
+                    </div>
                   </form>
                 </CardContent>
               </Card>
@@ -732,6 +822,14 @@ const AdminDashboard = () => {
                               </div>
                             </div>
                           )}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute top-3 right-12 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary hover:text-primary-foreground"
+                            onClick={() => handleEditResearchArea(area)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
                           <Button
                             variant="ghost"
                             size="icon"
