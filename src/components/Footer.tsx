@@ -27,12 +27,13 @@ const Footer = () => {
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-white mt-0.5" />
                 <p className="text-sm text-gray-300">
-                  Department of Electronics & Computer Engineering
+                  Department of Electronics & Computer Engineering, Lagos State
+                  University, Epe, Lagos
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-white" />
-                <p className="text-sm text-gray-300">+1 (555) 123-4567</p>
+                <p className="text-sm text-gray-300">+234 810 988 7654</p>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-white" />
