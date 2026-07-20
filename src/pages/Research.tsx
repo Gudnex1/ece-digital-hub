@@ -265,9 +265,9 @@ const Research = () => {
                   Get in Touch
                 </a>
               </Button>
-              <p className="mt-4 text-sm text-muted-foreground break-all">
+              {/* <p className="mt-4 text-sm text-muted-foreground break-all">
                 {contactEmail}
-              </p>
+              </p> */}
             </div>
           </div>
         </div>
