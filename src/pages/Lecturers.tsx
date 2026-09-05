@@ -124,39 +124,33 @@ const Lecturers = () => {
       );
     }
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {items.map(lecturer => (
           <Card
             key={lecturer.id}
             onClick={() => setSelected(lecturer)}
             className="group cursor-pointer overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-border/60"
           >
-            <CardContent className="p-6 flex flex-col items-center text-center">
-              <div className="relative mb-4">
-                {lecturer.profile_image_url ? (
-                  <img
-                    src={lecturer.profile_image_url}
-                    alt={lecturer.full_name}
-                    className="h-28 w-28 rounded-full object-cover ring-4 ring-primary/10 group-hover:ring-primary/30 transition"
-                  />
-                ) : (
-                  <div className="h-28 w-28 rounded-full bg-primary/10 flex items-center justify-center ring-4 ring-primary/10">
-                    <GraduationCap className="h-12 w-12 text-primary" />
-                  </div>
-                )}
+            <CardContent className="p-4 flex items-center gap-4 text-left">
+              {lecturer.profile_image_url ? (
+                <img
+                  src={lecturer.profile_image_url}
+                  alt={lecturer.full_name}
+                  className="h-20 w-20 sm:h-24 sm:w-24 flex-shrink-0 object-cover rounded-md bg-muted"
+                />
+              ) : (
+                <div className="h-20 w-20 sm:h-24 sm:w-24 flex-shrink-0 rounded-md bg-primary/10 flex items-center justify-center">
+                  <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+                </div>
+              )}
+              <div className="min-w-0">
+                <h3 className="text-base sm:text-lg font-semibold text-foreground leading-tight line-clamp-2">
+                  {lecturer.title ? `${lecturer.title} ${lecturer.full_name}` : lecturer.full_name}
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                  {lecturer.designation || lecturer.specialization || 'Department of ECE'}
+                </p>
               </div>
-              <h3 className="text-base font-semibold text-foreground leading-tight">
-                {lecturer.title ? `${lecturer.title} ${lecturer.full_name}` : lecturer.full_name}
-              </h3>
-              {lecturer.designation && (
-                <p className="text-sm text-primary mt-1 font-medium">{lecturer.designation}</p>
-              )}
-              {lecturer.specialization && (
-                <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{lecturer.specialization}</p>
-              )}
-              <span className="text-xs text-primary mt-4 opacity-0 group-hover:opacity-100 transition">
-                View profile →
-              </span>
             </CardContent>
           </Card>
         ))}
